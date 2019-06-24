@@ -143,3 +143,30 @@ PROMPT_COMMAND="find_git_branch; find_git_dirty; $PROMPT_COMMAND"
 export PS1="\[$bldgrn\]\u@\h\[$txtrst\] \w \[$bldylw\]\$git_branch\[$txtcyn\]\$git_dirty\[$txtrst\]\$ "
 export SUDO_PS1="\[$bakred\]\u@\h\[$txtrst\] \w\$ "
 ```
+
+My workflow is like this:
+
+Start from `master`
+
+`git branch -b develop` to create the develop branch. All features are branched off this. Once a branch is complete, checkout `develop` and merge the feature.
+If all is well, and after some features, switch to `master` and merge, commit and push `develop`.
+
+For example:
+
+```
+[master] git branch -b develop
+[develop] git branch -b features/some_meaningful_branch_name
+Add and update files...
+Test to make sure nothing has broken...
+[branch name] git commit -a -m 'Some meaningful words'
+[branch name] git push
+[branch name] git checkout develop
+[develop] git merge features/some_meaningful_branch_name
+Test to make sure nothing has broken...
+After multiple of the above...
+[develop] git checkout master
+[master] git merge develop
+[master] git commit -a -m 'Some summary of features'
+[master] git push
+```
+
