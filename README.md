@@ -155,7 +155,9 @@ For example:
 
 ```
 [master] git branch -b develop
+[develop] git push --set-upstream origin develop
 [develop] git branch -b features/some_meaningful_branch_name
+[features/some_meaningful_branch_name] git push --set-upstream develop features/some_meaningful_branch_name
 Add and update files...
 Test to make sure nothing has broken...
 [branch name] git commit -a -m 'Some meaningful words'
