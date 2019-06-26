@@ -59,7 +59,7 @@ These are simple ways to divide up a chain of process into discrete sections wit
 Interactors hold a *context* which allows information about the process to be chained together.
 
 The main process configures the required files, and uses an Organizer to chain 3 interactors.
-These are `PreLoad`, `Validator`, `Loader` and `Actor`.
+These are `EnvLoad`, `JsonValidator`, `Loader` and `Actor`.
 
 
 ## Notes

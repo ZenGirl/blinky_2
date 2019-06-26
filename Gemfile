@@ -6,6 +6,10 @@ gem 'multi_json', '= 1.13.1'
 gem 'oj', '=3.7.12'
 gem 'terminal-table', '=1.8.0'
 
+group :development, :test do
+  gem 'dotenv', '=2.7.4'
+end
+
 group :test do
   gem 'rspec', '=3.8.0'
   gem 'rubocop', '=0.71.0', require: false
