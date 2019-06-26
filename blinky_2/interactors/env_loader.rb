@@ -20,6 +20,9 @@ module Blinky2
 
     def call
       EXPECTED_VAR_NAMES.each(&method(:validate_environment_variable))
+      context.tickets_file      = ENV['BLINKY2_TICKETS']
+      context.users_file        = ENV['BLINKY2_USERS']
+      context.organisations_file = ENV['BLINKY2_ORGANISATIONS']
     end
 
     private
