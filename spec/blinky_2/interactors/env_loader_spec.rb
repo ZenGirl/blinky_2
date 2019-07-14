@@ -4,7 +4,7 @@ require 'blinky_2/interactors/env_loader'
 
 # rubocop:disable Metrics/BlockLength, Metrics/LineLength, Layout/SpaceInsideBlockBraces
 # We're going to disable rubocop messages as they clutter up the spec with '~' in RubyMine
-describe Blinky2::EnvLoader do
+describe Blinky2::Interactors::EnvLoader do
 
   # Test private methods
   describe 'Private methods' do
