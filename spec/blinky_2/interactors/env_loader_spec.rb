@@ -74,51 +74,45 @@ describe Blinky2::EnvLoader do
   describe 'Test environment variables' do
     let(:readable_file) {'./spec/support/readable_file'}
     let(:unreadable_file) {'./spec/support/unreadable_file'}
+
+    def assign_environment_variables(organisations, tickets, users)
+      ENV['BLINKY2_ORGANISATIONS'] = organisations
+      ENV['BLINKY2_TICKETS']       = tickets
+      ENV['BLINKY2_USERS']         = users
+    end
+
+    def expect_interactor_failure(error)
+      expect {subject.call}.to raise_error(Interactor::Failure)
+      expect(subject.context.error).to eq(error)
+    end
+
     describe 'Failures' do
       context 'Not in environment' do
         it 'fails if BLINKY2_TICKETS is not in environment' do
-          ENV['BLINKY2_ORGANISATIONS'] = readable_file
-          ENV['BLINKY2_TICKETS']       = nil
-          ENV['BLINKY2_USERS']         = readable_file
-          expect {subject.call}.to raise_error(Interactor::Failure)
-          expect(subject.context.error).to eq('The BLINKY2_TICKETS environment variable is not present')
+          assign_environment_variables(readable_file, nil, readable_file)
+          expect_interactor_failure('The BLINKY2_TICKETS environment variable is not present')
         end
         it 'fails if BLINKY2_USERS is not in environment' do
-          ENV['BLINKY2_ORGANISATIONS'] = readable_file
-          ENV['BLINKY2_TICKETS']       = readable_file
-          ENV['BLINKY2_USERS']         = nil
-          expect {subject.call}.to raise_error(Interactor::Failure)
-          expect(subject.context.error).to eq('The BLINKY2_USERS environment variable is not present')
+          assign_environment_variables(readable_file, readable_file, nil)
+          expect_interactor_failure('The BLINKY2_USERS environment variable is not present')
         end
         it 'fails if BLINKY2_ORGANISATIONS is not in environment' do
-          ENV['BLINKY2_ORGANISATIONS'] = nil
-          ENV['BLINKY2_TICKETS']       = readable_file
-          ENV['BLINKY2_USERS']         = readable_file
-          expect {subject.call}.to raise_error(Interactor::Failure)
-          expect(subject.context.error).to eq('The BLINKY2_ORGANISATIONS environment variable is not present')
+          assign_environment_variables(nil, readable_file, readable_file)
+          expect_interactor_failure('The BLINKY2_ORGANISATIONS environment variable is not present')
         end
       end
       context 'Must be usable filename' do
         it 'fails if BLINKY2_TICKETS is not usable' do
-          ENV['BLINKY2_ORGANISATIONS'] = readable_file
-          ENV['BLINKY2_TICKETS']       = ''
-          ENV['BLINKY2_USERS']         = readable_file
-          expect {subject.call}.to raise_error(Interactor::Failure)
-          expect(subject.context.error).to eq('The BLINKY2_TICKETS environment variable is not a usable string')
+          assign_environment_variables(readable_file, '', readable_file)
+          expect_interactor_failure('The BLINKY2_TICKETS environment variable is not a usable string')
         end
         it 'fails if BLINKY2_USERS is not usable' do
-          ENV['BLINKY2_ORGANISATIONS'] = readable_file
-          ENV['BLINKY2_TICKETS']       = readable_file
-          ENV['BLINKY2_USERS']         = ''
-          expect {subject.call}.to raise_error(Interactor::Failure)
-          expect(subject.context.error).to eq('The BLINKY2_USERS environment variable is not a usable string')
+          assign_environment_variables(readable_file, readable_file, '')
+          expect_interactor_failure('The BLINKY2_USERS environment variable is not a usable string')
         end
         it 'fails if BLINKY2_ORGANISATIONS usable' do
-          ENV['BLINKY2_ORGANISATIONS'] = ''
-          ENV['BLINKY2_TICKETS']       = readable_file
-          ENV['BLINKY2_USERS']         = readable_file
-          expect {subject.call}.to raise_error(Interactor::Failure)
-          expect(subject.context.error).to eq('The BLINKY2_ORGANISATIONS environment variable is not a usable string')
+          assign_environment_variables('', readable_file, readable_file)
+          expect_interactor_failure('The BLINKY2_ORGANISATIONS environment variable is not a usable string')
         end
       end
       context 'Must be a real readable file' do
@@ -129,33 +123,22 @@ describe Blinky2::EnvLoader do
           File.chmod(0444, unreadable_file)
         end
         it 'fails if BLINKY2_TICKETS does not name a readable file' do
-          ENV['BLINKY2_ORGANISATIONS'] = readable_file
-          ENV['BLINKY2_TICKETS']       = unreadable_file
-          ENV['BLINKY2_USERS']         = readable_file
-          expect {subject.call}.to raise_error(Interactor::Failure)
-          expect(subject.context.error).to eq('The BLINKY2_TICKETS environment variable does not name a readable file')
+          assign_environment_variables(readable_file, unreadable_file, readable_file)
+          expect_interactor_failure('The BLINKY2_TICKETS environment variable does not name a readable file')
         end
         it 'fails if BLINKY2_USERS does not name a readable file' do
-          ENV['BLINKY2_ORGANISATIONS'] = readable_file
-          ENV['BLINKY2_TICKETS']       = readable_file
-          ENV['BLINKY2_USERS']         = unreadable_file
-          expect {subject.call}.to raise_error(Interactor::Failure)
-          expect(subject.context.error).to eq('The BLINKY2_USERS environment variable does not name a readable file')
+          assign_environment_variables(readable_file, readable_file, unreadable_file)
+          expect_interactor_failure('The BLINKY2_USERS environment variable does not name a readable file')
         end
         it 'fails if BLINKY2_ORGANISATIONS does not name a readable file' do
-          ENV['BLINKY2_ORGANISATIONS'] = unreadable_file
-          ENV['BLINKY2_TICKETS']       = readable_file
-          ENV['BLINKY2_USERS']         = readable_file
-          expect {subject.call}.to raise_error(Interactor::Failure)
-          expect(subject.context.error).to eq('The BLINKY2_ORGANISATIONS environment variable does not name a readable file')
+          assign_environment_variables(unreadable_file, readable_file, readable_file)
+          expect_interactor_failure('The BLINKY2_ORGANISATIONS environment variable does not name a readable file')
         end
       end
     end
     describe 'Successes' do
       it 'succeeds if env vars are in environment, usable and readable' do
-        ENV['BLINKY2_ORGANISATIONS'] = readable_file
-        ENV['BLINKY2_TICKETS']       = readable_file
-        ENV['BLINKY2_USERS']         = readable_file
+        assign_environment_variables(readable_file, readable_file, readable_file)
         expect {subject.call}.not_to raise_error(Interactor::Failure)
         expect(subject.context.error).to be_nil
         expect(subject.context.organisations_file).to eq(readable_file)
