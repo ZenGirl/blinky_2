@@ -4,11 +4,7 @@ gem 'awesome_print'
 gem 'interactor', '= 3.1.1'
 gem 'multi_json', '= 1.13.1'
 gem 'oj', '=3.7.12'
-gem 'terminal-table', '=1.8.0'
-
-group :development, :test do
-  gem 'dotenv', '=2.7.4'
-end
+gem 'dotenv', '=2.7.4'
 
 group :test do
   gem 'rspec', '=3.8.0'
