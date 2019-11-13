@@ -1,7 +1,7 @@
 require 'spec/spec_helper'
 
 require 'blinky/constants'
-require 'blinky/interactors/valid_env_variables'
+require 'blinky/interactors/pre_flight/valid_env_variables'
 
 # rubocop:disable Metrics/BlockLength, Metrics/LineLength, Layout/SpaceInsideBlockBraces
 # We're going to disable rubocop messages as they clutter up the spec with '~' in RubyMine
