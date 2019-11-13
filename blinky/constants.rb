@@ -1,7 +1,5 @@
 module Blinky
-
   module Constants
-
     ENV_VAR_NAMES = %w[TICKETS USERS ORGANISATIONS].freeze
 
     # Disabled because it shows irritating message which provides no perceivable benefit
@@ -12,7 +10,5 @@ module Blinky
       not_found:    'does not name an existing file',
       not_readable: 'does not name a readable file'
     }.freeze
-
   end
-
 end

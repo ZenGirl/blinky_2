@@ -1,7 +1,5 @@
 module Blinky
-
   module Interactors
-
     # Ensures all environment variables are meaningful
     # This interactor is used solely to ensure that the
     # BLINKY_TICKETS, BLINKY_USERS and BLINKY_ORGANISATIONS
@@ -21,7 +19,7 @@ module Blinky
         result_var = ENV[env_var]
         fail_with_msg env_var, :not_present if result_var.nil?
         # ENV will always be a string if present
-        result_var = result_var.strip
+        result_var = ('' + result_var).strip
         fail_with_msg env_var, :not_usable if result_var.size <= 0
         result_var
       end
@@ -30,9 +28,6 @@ module Blinky
         context.error = "The #{env_var} #{Blinky::Constants::MESSAGES[msg]}"
         context.fail!
       end
-
     end
-
   end
-
 end

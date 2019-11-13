@@ -1,20 +1,18 @@
 module Blinky
-
   module Interactors
-
     # Ensures that all the file names provide exist and are readable.
     class ValidReadableFiles
       include Interactor
 
       def call
-        name_must_be_readable 'TICKETS', context.tickets_file
-        name_must_be_readable 'USERS', context.users_file
-        name_must_be_readable 'ORGANISATIONS', context.organisations_file
+        name_must_be_a_readable_file 'TICKETS', context.tickets_file
+        name_must_be_a_readable_file 'USERS', context.users_file
+        name_must_be_a_readable_file 'ORGANISATIONS', context.organisations_file
       end
 
       private
 
-      def name_must_be_readable(env_var, file_name)
+      def name_must_be_a_readable_file(env_var, file_name)
         must_exist(env_var, file_name)
         must_be_a_file(env_var, file_name)
         must_be_readable(env_var, file_name)
@@ -36,9 +34,6 @@ module Blinky
         context.error = "The #{env_var} environment variable file #{file_name} #{Blinky::Constants::MESSAGES[msg]}"
         context.fail!
       end
-
     end
-
   end
-
 end

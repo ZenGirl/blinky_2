@@ -2,10 +2,9 @@ require 'spec/spec_helper'
 
 require 'blinky/constants'
 
-# rubocop:disable Metrics/BlockLength, Metrics/LineLength, Layout/SpaceInsideBlockBraces
+# rubocop:disable Metrics/LineLength
 # We're going to disable rubocop messages as they clutter up the spec with '~' in RubyMine
 describe Blinky::Constants do
-
   describe 'ENV_VAR_NAMES' do
     it 'must have TICKETS' do
       expect(subject::ENV_VAR_NAMES.include?('TICKETS')).to be true
@@ -32,5 +31,5 @@ describe Blinky::Constants do
       it {expect(subject::MESSAGES[:not_found]).to eq('does not name an existing file')}
     end
   end
-
 end
+# rubocop:enable Metrics/LineLength

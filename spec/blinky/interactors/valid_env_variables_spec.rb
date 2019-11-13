@@ -6,6 +6,9 @@ require 'blinky/interactors/valid_env_variables'
 # rubocop:disable Metrics/BlockLength, Metrics/LineLength, Layout/SpaceInsideBlockBraces
 # We're going to disable rubocop messages as they clutter up the spec with '~' in RubyMine
 describe Blinky::Interactors::ValidEnvVariables do
+  let(:tickets_name) {'TICKETS'}
+  let(:users_name) {'USERS'}
+  let(:organisations_name) {'ORGANISATIONS'}
   describe 'Private Methods' do
     describe 'Raises interactor failure for' do
       let(:is_not_present) {'is not present'}
@@ -24,19 +27,19 @@ describe Blinky::Interactors::ValidEnvVariables do
 
       context 'each env var TICKETS, USERS and ORGANISATIONS' do
         context 'if value is nil then context.error' do
-          it {raises_interactor_failure('TICKETS', nil, is_not_present)}
-          it {raises_interactor_failure('USERS', nil, is_not_present)}
-          it {raises_interactor_failure('ORGANISATIONS', nil, is_not_present)}
+          it {raises_interactor_failure(tickets_name, nil, is_not_present)}
+          it {raises_interactor_failure(users_name, nil, is_not_present)}
+          it {raises_interactor_failure(organisations_name, nil, is_not_present)}
         end
         context 'or if value is empty string then context.error' do
-          it {raises_interactor_failure('TICKETS', '', is_blank)}
-          it {raises_interactor_failure('USERS', '', is_blank)}
-          it {raises_interactor_failure('ORGANISATIONS', '', is_blank)}
+          it {raises_interactor_failure(tickets_name, '', is_blank)}
+          it {raises_interactor_failure(users_name, '', is_blank)}
+          it {raises_interactor_failure(organisations_name, '', is_blank)}
         end
         context 'or if value is blank after stripping then context.error' do
-          it {raises_interactor_failure('TICKETS', '     ', is_blank)}
-          it {raises_interactor_failure('USERS', '     ', is_blank)}
-          it {raises_interactor_failure('ORGANISATIONS', '     ', is_blank)}
+          it {raises_interactor_failure(tickets_name, '     ', is_blank)}
+          it {raises_interactor_failure(users_name, '     ', is_blank)}
+          it {raises_interactor_failure(organisations_name, '     ', is_blank)}
         end
       end
     end
@@ -51,13 +54,13 @@ describe Blinky::Interactors::ValidEnvVariables do
 
       context 'each env var TICKETS, USERS and ORGANISATIONS' do
         context 'if TICKETS is present and not blank then success' do
-          it {no_interactor_failure('TICKETS', 'Dummy')}
+          it {no_interactor_failure(tickets_name, 'Dummy')}
         end
         context 'if USERS is present and not blank and success' do
-          it {no_interactor_failure('USERS', 'Dummy')}
+          it {no_interactor_failure(users_name, 'Dummy')}
         end
         context 'if ORGANISATIONS is present and not blank and success' do
-          it {no_interactor_failure('ORGANISATIONS', 'Dummy')}
+          it {no_interactor_failure(organisations_name, 'Dummy')}
         end
       end
     end
@@ -66,9 +69,9 @@ describe Blinky::Interactors::ValidEnvVariables do
   describe '#call' do
     context 'when all env vars are present and valid then success' do
       before do
-        ENV['TICKETS']       = 'Dummy Tickets'
-        ENV['USERS']         = 'Dummy Users'
-        ENV['ORGANISATIONS'] = 'Dummy Organisations'
+        ENV[tickets_name]       = 'Dummy Tickets'
+        ENV[users_name]         = 'Dummy Users'
+        ENV[organisations_name] = 'Dummy Organisations'
         subject.call
       end
 
@@ -86,9 +89,9 @@ describe Blinky::Interactors::ValidEnvVariables do
 
     context 'and if any env value is not usable then' do
       before do
-        ENV['TICKETS']       = nil
-        ENV['USERS']         = nil
-        ENV['ORGANISATIONS'] = nil
+        ENV[tickets_name]       = nil
+        ENV[users_name]         = nil
+        ENV[organisations_name] = nil
       end
 
       it 'raises error and fails' do

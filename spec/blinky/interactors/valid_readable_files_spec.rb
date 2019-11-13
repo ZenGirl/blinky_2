@@ -10,7 +10,11 @@ describe Blinky::Interactors::ValidReadableFiles do
   let(:does_not_name_readable_file) {'does not name a readable file'}
   let(:not_an_existing_file) {'spec/support/not_an_existing_file'}
   let(:not_a_file) {'spec/support/dummy_folder'}
+  let(:readable_file) {'spec/support/readable_file'}
   let(:unreadable_file) {'spec/support/unreadable_file'}
+  let(:tickets_name) {'TICKETS'}
+  let(:users_name) {'USERS'}
+  let(:organisations_name) {'ORGANISATIONS'}
 
   def formatted_message(env_var, env_value, suffix)
     "The #{env_var} environment variable file #{env_value} #{suffix}"
@@ -26,14 +30,14 @@ describe Blinky::Interactors::ValidReadableFiles do
     describe 'Raises interactor failure for' do
       context 'each of context file names' do
         context 'if value does not exist then raises interactor failure and context.error' do
-          it {raises_interactor_failure(:must_exist, 'TICKETS', not_an_existing_file, does_not_name_existing_file)}
-          it {raises_interactor_failure(:must_exist, 'USERS', not_an_existing_file, does_not_name_existing_file)}
-          it {raises_interactor_failure(:must_exist, 'ORGANISATIONS', not_an_existing_file, does_not_name_existing_file)}
+          it {raises_interactor_failure(:must_exist, tickets_name, not_an_existing_file, does_not_name_existing_file)}
+          it {raises_interactor_failure(:must_exist, users_name, not_an_existing_file, does_not_name_existing_file)}
+          it {raises_interactor_failure(:must_exist, organisations_name, not_an_existing_file, does_not_name_existing_file)}
         end
         context 'if value exists but is not a file then raises interactor failure and context.error' do
-          it {raises_interactor_failure(:must_be_a_file, 'TICKETS', not_a_file, does_not_name_readable_file)}
-          it {raises_interactor_failure(:must_be_a_file, 'USERS', not_a_file, does_not_name_readable_file)}
-          it {raises_interactor_failure(:must_be_a_file, 'ORGANISATIONS', not_a_file, does_not_name_readable_file)}
+          it {raises_interactor_failure(:must_be_a_file, tickets_name, not_a_file, does_not_name_readable_file)}
+          it {raises_interactor_failure(:must_be_a_file, users_name, not_a_file, does_not_name_readable_file)}
+          it {raises_interactor_failure(:must_be_a_file, organisations_name, not_a_file, does_not_name_readable_file)}
         end
         context 'if value exists and is a file but is not readable then raises interactor failure and context.error' do
           before do
@@ -42,9 +46,9 @@ describe Blinky::Interactors::ValidReadableFiles do
           after do
             File.chmod(0644, unreadable_file)
           end
-          it {raises_interactor_failure(:must_be_readable, 'TICKETS', unreadable_file, does_not_name_readable_file)}
-          it {raises_interactor_failure(:must_be_readable, 'USERS', unreadable_file, does_not_name_readable_file)}
-          it {raises_interactor_failure(:must_be_readable, 'ORGANISATIONS', unreadable_file, does_not_name_readable_file)}
+          it {raises_interactor_failure(:must_be_readable, tickets_name, unreadable_file, does_not_name_readable_file)}
+          it {raises_interactor_failure(:must_be_readable, users_name, unreadable_file, does_not_name_readable_file)}
+          it {raises_interactor_failure(:must_be_readable, organisations_name, unreadable_file, does_not_name_readable_file)}
         end
       end
     end
@@ -63,9 +67,9 @@ describe Blinky::Interactors::ValidReadableFiles do
   describe '#call' do
     context 'when all files are readable then success' do
       before do
-        subject.context.tickets_file       = 'spec/support/readable_file'
-        subject.context.users_file         = 'spec/support/readable_file'
-        subject.context.organisations_file = 'spec/support/readable_file'
+        subject.context.tickets_file       = readable_file
+        subject.context.users_file         = readable_file
+        subject.context.organisations_file = readable_file
         subject.call
       end
       it {expect(subject.context.success?).to be true}
@@ -74,9 +78,9 @@ describe Blinky::Interactors::ValidReadableFiles do
     context 'when any file is not readable then ' do
       before do
         File.chmod(0222, unreadable_file)
-        subject.context.tickets_file       = 'spec/support/readable_file'
-        subject.context.users_file         = 'spec/support/unreadable_file'
-        subject.context.organisations_file = 'spec/support/readable_file'
+        subject.context.tickets_file       = readable_file
+        subject.context.users_file         = unreadable_file
+        subject.context.organisations_file = readable_file
       end
       after do
         File.chmod(0644, unreadable_file)
