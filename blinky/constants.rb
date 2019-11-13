@@ -9,6 +9,7 @@ module Blinky
     MESSAGES = {
       not_present:  'environment variable is not present',
       not_usable:   'environment variable is blank',
+      not_found:    'does not name an existing file',
       not_readable: 'does not name a readable file'
     }.freeze
 

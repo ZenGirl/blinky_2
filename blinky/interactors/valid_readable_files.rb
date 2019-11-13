@@ -7,12 +7,9 @@ module Blinky
       include Interactor
 
       def call
-        [
-          ['BLINKY_TICKETS', context.tickets_file]
-        ].each do |arr|
-          ap arr
-          name_must_be_readable arr[0], arr[1]
-        end
+        name_must_be_readable 'TICKETS', context.tickets_file
+        name_must_be_readable 'USERS', context.users_file
+        name_must_be_readable 'ORGANISATIONS', context.organisations_file
       end
 
       private
@@ -23,20 +20,20 @@ module Blinky
         must_be_readable(env_var, file_name)
       end
 
-      def must_be_readable(env_var, file_name)
-        fail_with_msg env_var, file_name, :not_readable unless File.readable? file_name
+      def must_exist(env_var, file_name)
+        fail_with_msg env_var, file_name, :not_found unless File.exist? file_name
       end
 
       def must_be_a_file(env_var, file_name)
         fail_with_msg env_var, file_name, :not_readable unless File.file? file_name
       end
 
-      def must_exist(env_var, file_name)
-        fail_with_msg env_var, file_name, :not_readable unless File.exist? file_name
+      def must_be_readable(env_var, file_name)
+        fail_with_msg env_var, file_name, :not_readable unless File.readable? file_name
       end
 
       def fail_with_msg(env_var, file_name, msg)
-        context.error = "The #{env_var} file #{file_name} #{Blinky::Constants::MESSAGES[msg]}"
+        context.error = "The #{env_var} environment variable file #{file_name} #{Blinky::Constants::MESSAGES[msg]}"
         context.fail!
       end
 

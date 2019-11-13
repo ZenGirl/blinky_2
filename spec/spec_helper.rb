@@ -1,14 +1,14 @@
 # NOTE:
 # clear; bundle exec rspec
 
+require 'simplecov'
+SimpleCov.start
+
 require 'rspec'
 require 'interactor'
 require 'oj'
 require 'multi_json'
 require 'awesome_print'
-
-require 'simplecov'
-SimpleCov.start
 
 $LOAD_PATH << File.expand_path('.')
 

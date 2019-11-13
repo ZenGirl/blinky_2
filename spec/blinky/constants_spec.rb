@@ -28,6 +28,9 @@ describe Blinky::Constants do
     context 'not_readable key value' do
       it {expect(subject::MESSAGES[:not_readable]).to eq('does not name a readable file')}
     end
+    context 'not_found key value' do
+      it {expect(subject::MESSAGES[:not_found]).to eq('does not name an existing file')}
+    end
   end
 
 end

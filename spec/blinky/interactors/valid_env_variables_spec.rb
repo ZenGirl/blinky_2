@@ -1,17 +1,13 @@
 require 'spec/spec_helper'
 
-require 'interactor'
 require 'blinky/constants'
 require 'blinky/interactors/valid_env_variables'
 
 # rubocop:disable Metrics/BlockLength, Metrics/LineLength, Layout/SpaceInsideBlockBraces
 # We're going to disable rubocop messages as they clutter up the spec with '~' in RubyMine
 describe Blinky::Interactors::ValidEnvVariables do
-
   describe 'Private Methods' do
-
     describe 'Raises interactor failure for' do
-
       let(:is_not_present) {'is not present'}
       let(:is_blank) {'is blank'}
 
@@ -43,7 +39,6 @@ describe Blinky::Interactors::ValidEnvVariables do
           it {raises_interactor_failure('ORGANISATIONS', '     ', is_blank)}
         end
       end
-
     end
 
     describe 'Does not raise interactor failure for' do
@@ -66,11 +61,9 @@ describe Blinky::Interactors::ValidEnvVariables do
         end
       end
     end
-
   end
 
   describe '#call' do
-
     context 'when all env vars are present and valid then success' do
       before do
         ENV['TICKETS']       = 'Dummy Tickets'
@@ -102,8 +95,7 @@ describe Blinky::Interactors::ValidEnvVariables do
         expect {subject.call}.to raise_error(Interactor::Failure)
         expect(subject.context.success?).to be false
       end
-
     end
-
   end
 end
+# rubocop:enable Metrics/BlockLength, Metrics/LineLength, Layout/SpaceInsideBlockBraces
