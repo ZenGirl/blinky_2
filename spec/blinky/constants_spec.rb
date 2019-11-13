@@ -17,6 +17,7 @@ describe Blinky::Constants do
     end
   end
 
+  # rubocop:disable Layout/SpaceInsideBlockBraces
   describe 'for MESSAGES' do
     context 'not_present key value' do
       it {expect(subject::MESSAGES[:not_present]).to eq('environment variable is not present')}
@@ -31,5 +32,20 @@ describe Blinky::Constants do
       it {expect(subject::MESSAGES[:not_found]).to eq('does not name an existing file')}
     end
   end
+  # rubocop:enable Layout/SpaceInsideBlockBraces
+
+  # rubocop:disable Layout/SpaceInsideBlockBraces
+  describe 'for SCHEMAS' do
+    context 'ticket key' do
+      it {expect(subject::SCHEMAS[:ticket]).to_not be nil}
+    end
+    context 'user key' do
+      it {expect(subject::SCHEMAS[:user]).to_not be nil}
+    end
+    context 'organization key' do
+      it {expect(subject::SCHEMAS[:organization]).to_not be nil}
+    end
+  end
+  # rubocop:enable Layout/SpaceInsideBlockBraces
 end
 # rubocop:enable Metrics/LineLength
