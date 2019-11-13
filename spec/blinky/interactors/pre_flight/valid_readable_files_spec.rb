@@ -5,7 +5,7 @@ require 'blinky/interactors/pre_flight/valid_readable_files'
 
 # rubocop:disable Metrics/BlockLength, Metrics/LineLength, Layout/SpaceInsideBlockBraces
 # We're going to disable rubocop messages as they clutter up the spec with '~' in RubyMine
-describe Blinky::Interactors::ValidReadableFiles do
+describe Blinky::Interactors::PreFlight::ValidReadableFiles do
   let(:does_not_name_existing_file) {'does not name an existing file'}
   let(:does_not_name_readable_file) {'does not name a readable file'}
   let(:not_an_existing_file) {'spec/support/not_an_existing_file'}
@@ -66,6 +66,8 @@ describe Blinky::Interactors::ValidReadableFiles do
 
   describe '#call' do
     context 'when all files are readable then success' do
+      # Sigh. Just to get rid of those annoying twiddles for the context variables
+      # noinspection RubyResolve
       before do
         subject.context.tickets_file       = readable_file
         subject.context.users_file         = readable_file
@@ -76,6 +78,8 @@ describe Blinky::Interactors::ValidReadableFiles do
     end
 
     context 'when any file is not readable then ' do
+      # Sigh. Just to get rid of those annoying twiddles for the context variables
+      # noinspection RubyResolve
       before do
         File.chmod(0222, unreadable_file)
         subject.context.tickets_file       = readable_file

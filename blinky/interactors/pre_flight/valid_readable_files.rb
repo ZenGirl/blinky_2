@@ -1,38 +1,42 @@
 module Blinky
   module Interactors
-    # Ensures that all the file names provide exist and are readable.
-    class ValidReadableFiles
-      include Interactor
+    module PreFlight
+      # Ensures that all the file names provide exist and are readable.
+      class ValidReadableFiles
+        include Interactor
 
-      def call
-        name_must_be_a_readable_file 'TICKETS', context.tickets_file
-        name_must_be_a_readable_file 'USERS', context.users_file
-        name_must_be_a_readable_file 'ORGANISATIONS', context.organisations_file
-      end
+        # Just to get rid of those annoying twiddles for the context vars
+        # noinspection RubyResolve
+        def call
+          name_must_be_a_readable_file 'TICKETS', context.tickets_file
+          name_must_be_a_readable_file 'USERS', context.users_file
+          name_must_be_a_readable_file 'ORGANISATIONS', context.organisations_file
+        end
 
-      private
+        private
 
-      def name_must_be_a_readable_file(env_var, file_name)
-        must_exist(env_var, file_name)
-        must_be_a_file(env_var, file_name)
-        must_be_readable(env_var, file_name)
-      end
+        def name_must_be_a_readable_file(env_var, name)
+          must_exist(env_var, name)
+          must_be_a_file(env_var, name)
+          must_be_readable(env_var, name)
+        end
 
-      def must_exist(env_var, file_name)
-        fail_with_msg env_var, file_name, :not_found unless File.exist? file_name
-      end
+        def must_exist(env_var, name)
+          fail_with_msg env_var, name, :not_found unless File.exist? name
+        end
 
-      def must_be_a_file(env_var, file_name)
-        fail_with_msg env_var, file_name, :not_readable unless File.file? file_name
-      end
+        def must_be_a_file(env_var, name)
+          fail_with_msg env_var, name, :not_readable unless File.file? name
+        end
 
-      def must_be_readable(env_var, file_name)
-        fail_with_msg env_var, file_name, :not_readable unless File.readable? file_name
-      end
+        def must_be_readable(env_var, name)
+          fail_with_msg env_var, name, :not_readable unless File.readable? name
+        end
 
-      def fail_with_msg(env_var, file_name, msg)
-        context.error = "The #{env_var} environment variable file #{file_name} #{Blinky::Constants::MESSAGES[msg]}"
-        context.fail!
+        def fail_with_msg(env_var, name, msg)
+          context.error = "The #{env_var} environment variable file #{name} #{Blinky::Constants::MESSAGES[msg]}"
+          context.fail!
+        end
       end
     end
   end

@@ -5,7 +5,7 @@ require 'blinky/interactors/pre_flight/valid_env_variables'
 
 # rubocop:disable Metrics/BlockLength, Metrics/LineLength, Layout/SpaceInsideBlockBraces
 # We're going to disable rubocop messages as they clutter up the spec with '~' in RubyMine
-describe Blinky::Interactors::ValidEnvVariables do
+describe Blinky::Interactors::PreFlight::ValidEnvVariables do
   let(:tickets_name) {'TICKETS'}
   let(:users_name) {'USERS'}
   let(:organisations_name) {'ORGANISATIONS'}
@@ -77,12 +77,18 @@ describe Blinky::Interactors::ValidEnvVariables do
 
       it {expect(subject.context.success?).to be true}
       context 'and tickets_file' do
+        # Sigh. Just to get rid of those annoying twiddles for the context vars
+        # noinspection RubyResolve
         it {expect(subject.context.tickets_file).to eq 'Dummy Tickets'}
       end
       context 'and users_file' do
+        # Sigh. Just to get rid of those annoying twiddles for the context vars
+        # noinspection RubyResolve
         it {expect(subject.context.users_file).to eq 'Dummy Users'}
       end
       context 'and organisations_file' do
+        # Sigh. Just to get rid of those annoying twiddles for the context vars
+        # noinspection RubyResolve
         it {expect(subject.context.organisations_file).to eq 'Dummy Organisations'}
       end
     end
