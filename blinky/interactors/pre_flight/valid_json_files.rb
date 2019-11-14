@@ -23,7 +23,7 @@ module Blinky
 
         def must_not_be_too_big(file_name)
           max_file_size = Blinky::Constants::MAX_FILE_SIZE
-          return true if File.size(file_name) < max_file_size
+          return true if File.size(file_name) <= max_file_size
 
           context.error = "The #{file_name} should be less than #{max_file_size}"
           context.fail!
