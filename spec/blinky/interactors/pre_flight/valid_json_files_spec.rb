@@ -28,6 +28,8 @@ describe Blinky::Interactors::PreFlight::ValidJsonFiles do
       context 'should succeed if' do
         it 'file size < max size' do
           file_name = 'spec/support/under_max_size'
+          max_size  = Blinky::Constants::MAX_FILE_SIZE
+          allow(File).to receive(:size).with(file_name).and_return(max_size)
           expect {subject.send(:must_not_be_too_big, file_name)}.not_to raise_error(Interactor::Failure)
           expect(subject.context.success?).to be true
         end
