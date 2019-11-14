@@ -14,6 +14,11 @@ $LOAD_PATH << File.expand_path('.')
 
 RSpec::Expectations.configuration.on_potential_false_positives = :nothing
 # RSpec.configure do |config|
+#   config.expect_with :rspec do |expectations|
+#     expectations.syntax = :expect
+#   end
+# end
+# RSpec.configure do |config|
 #   original_stderr = $stderr
 #   original_stdout = $stdout
 #   config.before(:all) do

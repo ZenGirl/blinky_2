@@ -31,6 +31,15 @@ describe Blinky::Constants do
     context 'not_found key value' do
       it {expect(subject::MESSAGES[:not_found]).to eq('does not name an existing file')}
     end
+    context 'not_readable key value' do
+      it {expect(subject::MESSAGES[:not_readable]).to eq('does not name a readable file')}
+    end
+    context 'file_error key value' do
+      it {expect(subject::MESSAGES[:file_error]).to eq('caused an exception: ')}
+    end
+    context 'invalid_json key value' do
+      it {expect(subject::MESSAGES[:invalid_json]).to eq('is not valid json')}
+    end
   end
   # rubocop:enable Layout/SpaceInsideBlockBraces
 

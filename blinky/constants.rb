@@ -5,10 +5,13 @@ module Blinky
     # rubocop:disable Metrics/LineLength, Layout/AlignHash
     # Disabled because it shows irritating message which provides no perceivable benefit
     MESSAGES = {
-      not_present:  'environment variable is not present',
-      not_usable:   'environment variable is blank',
-      not_found:    'does not name an existing file',
-      not_readable: 'does not name a readable file'
+      not_present:      'environment variable is not present',
+      not_usable:       'environment variable is blank',
+      not_found:        'does not name an existing file',
+      not_readable:     'does not name a readable file',
+      file_error:       'caused an exception: ',
+      invalid_json:     'is not valid json',
+      non_utf8:         'has non UTF-8 chars'
     }.freeze
     # rubocop:enable Metrics/LineLength, Layout/AlignHash
 
@@ -79,5 +82,27 @@ module Blinky
       }
     }.freeze
     # rubocop:enable Metrics/LineLength, Layout/AlignHash, Layout/AlignArray, Style/PercentLiteralDelimiters, Layout/SpaceInsideHashLiteralBraces
+
+    # For reference, this is modified from:
+    # https://stackoverflow.com/questions/2583472/regex-to-validate-json
+    # rubocop:disable Metrics/LineLength, Style/MutableConstant, Style/RegexpLiteral
+    JSON_REGEX = /(
+         # define subtypes and build up the json syntax, BNF-grammar-style
+         # The {0} is a hack to simply define them as named groups here but not match on them yet
+         # I added some atomic grouping to prevent catastrophic backtracking on invalid inputs
+         (?<number>  -?(?=[1-9]|0(?!\d))\d+(\.\d+)?([eE][+-]?\d+)?){0}
+         (?<boolean> true | false | null ){0}
+         (?<string>  " (?>[^"\\\\]* | \\\\ ["\\\\bfnrt\/] | \\\\ u [0-9a-f]{4} )* " ){0}
+         (?<array>   \[ (?> \g<json> (?: , \g<json> )* )? \s* \] ){0}
+         (?<pair>    \s* \g<string> \s* : \g<json> ){0}
+         (?<object>  \{ (?> \g<pair> (?: , \g<pair> )* )? \s* \} ){0}
+         (?<json>    \s* (?> \g<number> | \g<boolean> | \g<string> | \g<array> | \g<object> ) \s* ){0}
+       )
+    \A \g<json> \Z
+    /uix
+    # rubocop:disable Metrics/LineLength, Style/MutableConstant, Style/RegexpLiteral
+
+    MAX_FILE_SIZE = 200_000 # bytes
+
   end
 end
