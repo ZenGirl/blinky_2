@@ -1,4 +1,5 @@
 # rubocop:disable Style/FrozenStringLiteralComment
+# Disabled, because we have to fiddle with strings that *may* be frozen
 
 require 'spec/spec_helper'
 
