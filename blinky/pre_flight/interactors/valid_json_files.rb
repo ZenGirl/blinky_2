@@ -8,6 +8,7 @@ module Blinky
         include Interactor
 
         def call
+          # noinspection RubyResolve
           [context.tickets_file, context.users_file, context.organisations_file].each do |file_name|
             must_not_be_too_big(file_name)
             json_string = load_file(file_name)
@@ -47,6 +48,7 @@ module Blinky
 
         # For reference, this is modified from:
         # https://stackoverflow.com/questions/2583472/regex-to-validate-json
+        # rubocop:disable Layout/SpaceInsideBlockBraces, Style/SymbolProc
         def must_match_regex(file_name, str)
           match_json = str.gsub(/^#{str.scan(/^(?!\n)\s*/).min_by {|l| l.length}}/u, '')
           result     = match_json.match(Blinky::Constants::JSON_REGEX)
@@ -55,6 +57,7 @@ module Blinky
           context.error = "The file #{file_name} #{error_message(:invalid_json)}"
           context.fail!
         end
+        # rubocop:enable Layout/SpaceInsideBlockBraces, Style/SymbolProc
 
         def error_message(sym)
           Blinky::Constants::MESSAGES[sym]
