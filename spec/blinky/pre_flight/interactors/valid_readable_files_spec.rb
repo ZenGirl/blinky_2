@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'spec/spec_helper'
 
 require 'blinky/constants'
-require 'blinky/interactors/pre_flight/valid_readable_files'
+require 'blinky/pre_flight/interactors/valid_readable_files'
 
-# rubocop:disable Metrics/BlockLength, Metrics/LineLength, Layout/SpaceInsideBlockBraces
 # We're going to disable rubocop messages as they clutter up the spec with '~' in RubyMine
-describe Blinky::Interactors::PreFlight::ValidReadableFiles do
+# rubocop:disable Metrics/LineLength, Layout/SpaceInsideBlockBraces
+describe Blinky::PreFlight::Interactors::ValidReadableFiles do
   let(:does_not_name_existing_file) {'does not name an existing file'}
   let(:does_not_name_readable_file) {'does not name a readable file'}
   let(:not_an_existing_file) {'spec/support/not_an_existing_file'}
@@ -98,4 +100,4 @@ describe Blinky::Interactors::PreFlight::ValidReadableFiles do
     end
   end
 end
-# rubocop:enable Metrics/BlockLength, Metrics/LineLength, Layout/SpaceInsideBlockBraces
+# rubocop:enable Metrics/LineLength, Layout/SpaceInsideBlockBraces

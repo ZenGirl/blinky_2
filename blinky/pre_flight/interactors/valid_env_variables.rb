@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module Blinky
-  module Interactors
-    module PreFlight
+  module PreFlight
+    module Interactors
       # Ensures all environment variables are meaningful
       # This interactor is used solely to ensure that the
       # BLINKY_TICKETS, BLINKY_USERS and BLINKY_ORGANISATIONS

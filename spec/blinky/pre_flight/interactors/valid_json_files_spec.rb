@@ -1,10 +1,12 @@
+# rubocop:disable Style/FrozenStringLiteralComment
+
 require 'spec/spec_helper'
 
-require 'blinky/interactors/pre_flight/valid_json_files'
+require 'blinky/pre_flight/interactors/valid_json_files'
 
-# rubocop:disable Metrics/BlockLength, Metrics/LineLength, Layout/SpaceInsideBlockBraces
 # We're going to disable rubocop messages as they clutter up the spec with '~' in RubyMine
-describe Blinky::Interactors::PreFlight::ValidJsonFiles do
+# rubocop:disable Layout/SpaceInsideBlockBraces
+describe Blinky::PreFlight::Interactors::ValidJsonFiles do
   describe 'private methods' do
     def error_message(sym)
       Blinky::Constants::MESSAGES[sym]
@@ -104,4 +106,4 @@ describe Blinky::Interactors::PreFlight::ValidJsonFiles do
     end
   end
 end
-# rubocop:enable Metrics/BlockLength, Metrics/LineLength, Layout/SpaceInsideBlockBraces
+# rubocop:enable Layout/SpaceInsideBlockBraces

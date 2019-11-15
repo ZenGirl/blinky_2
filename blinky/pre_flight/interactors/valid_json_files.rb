@@ -1,15 +1,18 @@
+# frozen_string_literal: true
+
 module Blinky
-  module Interactors
-    module PreFlight
+  module PreFlight
+    module Interactors
       # Ensures that the files provide are actually JSON
       class ValidJsonFiles
         include Interactor
 
         def call
-          must_not_be_too_big(context.tickets_file)
-          json_string = load_file(context.tickets_file)
-          must_match_regex(context.tickets_file, json_string)
-          must_match_schema(json_string, Blinky::Constants::Schemas[:ticket])
+          [context.tickets_file, context.users_file, context.organisations_file].each do |file_name|
+            must_not_be_too_big(file_name)
+            json_string = load_file(file_name)
+            must_match_regex(file_name, json_string)
+          end
         end
 
         private
@@ -51,10 +54,6 @@ module Blinky
 
           context.error = "The file #{file_name} #{error_message(:invalid_json)}"
           context.fail!
-        end
-
-        def must_match_schema(file_name, schema)
-
         end
 
         def error_message(sym)

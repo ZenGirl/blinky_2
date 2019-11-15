@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module Blinky
   module Constants
     ENV_VAR_NAMES = %w[TICKETS USERS ORGANISATIONS].freeze
 
-    # rubocop:disable Metrics/LineLength, Layout/AlignHash
+    # rubocop:disable Layout/AlignHash
     # Disabled because it shows irritating message which provides no perceivable benefit
     MESSAGES = {
       not_present:      'environment variable is not present',
@@ -13,7 +15,7 @@ module Blinky
       invalid_json:     'is not valid json',
       non_utf8:         'has non UTF-8 chars'
     }.freeze
-    # rubocop:enable Metrics/LineLength, Layout/AlignHash
+    # rubocop:enable Layout/AlignHash
 
     # rubocop:disable Metrics/LineLength, Layout/AlignHash, Layout/AlignArray, Style/PercentLiteralDelimiters, Layout/SpaceInsideHashLiteralBraces
     SCHEMAS = {
@@ -85,7 +87,7 @@ module Blinky
 
     # For reference, this is modified from:
     # https://stackoverflow.com/questions/2583472/regex-to-validate-json
-    # rubocop:disable Metrics/LineLength, Style/MutableConstant, Style/RegexpLiteral
+    # rubocop:disable Style/MutableConstant, Style/RegexpLiteral
     JSON_REGEX = /(
          # define subtypes and build up the json syntax, BNF-grammar-style
          # The {0} is a hack to simply define them as named groups here but not match on them yet
@@ -100,9 +102,9 @@ module Blinky
        )
     \A \g<json> \Z
     /uix
-    # rubocop:disable Metrics/LineLength, Style/MutableConstant, Style/RegexpLiteral
+    # rubocop:enable Style/MutableConstant, Style/RegexpLiteral
 
+    # Should be changeable via command line
     MAX_FILE_SIZE = 200_000 # bytes
-
   end
 end

@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'spec/spec_helper'
 
 require 'blinky/constants'
-require 'blinky/interactors/pre_flight/valid_env_variables'
+require 'blinky/pre_flight/interactors/valid_env_variables'
 
-# rubocop:disable Metrics/BlockLength, Metrics/LineLength, Layout/SpaceInsideBlockBraces
 # We're going to disable rubocop messages as they clutter up the spec with '~' in RubyMine
-describe Blinky::Interactors::PreFlight::ValidEnvVariables do
+# rubocop:disable Layout/SpaceInsideBlockBraces
+describe Blinky::PreFlight::Interactors::ValidEnvVariables do
   let(:tickets_name) {'TICKETS'}
   let(:users_name) {'USERS'}
   let(:organisations_name) {'ORGANISATIONS'}
@@ -107,4 +109,4 @@ describe Blinky::Interactors::PreFlight::ValidEnvVariables do
     end
   end
 end
-# rubocop:enable Metrics/BlockLength, Metrics/LineLength, Layout/SpaceInsideBlockBraces
+# rubocop:enable Layout/SpaceInsideBlockBraces

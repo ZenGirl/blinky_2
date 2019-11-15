@@ -1,9 +1,10 @@
+# frozen_string_literal: true
+
 require 'spec/spec_helper'
 
 require 'blinky/constants'
 
-# rubocop:disable Metrics/LineLength
-# We're going to disable rubocop messages as they clutter up the spec with '~' in RubyMine
+# rubocop:disable Layout/SpaceInsideBlockBraces
 describe Blinky::Constants do
   describe 'ENV_VAR_NAMES' do
     it 'must have TICKETS' do
@@ -17,7 +18,6 @@ describe Blinky::Constants do
     end
   end
 
-  # rubocop:disable Layout/SpaceInsideBlockBraces
   describe 'for MESSAGES' do
     context 'not_present key value' do
       it {expect(subject::MESSAGES[:not_present]).to eq('environment variable is not present')}
@@ -41,9 +41,7 @@ describe Blinky::Constants do
       it {expect(subject::MESSAGES[:invalid_json]).to eq('is not valid json')}
     end
   end
-  # rubocop:enable Layout/SpaceInsideBlockBraces
 
-  # rubocop:disable Layout/SpaceInsideBlockBraces
   describe 'for SCHEMAS' do
     context 'ticket key' do
       it {expect(subject::SCHEMAS[:ticket]).to_not be nil}
@@ -55,6 +53,5 @@ describe Blinky::Constants do
       it {expect(subject::SCHEMAS[:organization]).to_not be nil}
     end
   end
-  # rubocop:enable Layout/SpaceInsideBlockBraces
 end
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/SpaceInsideBlockBraces

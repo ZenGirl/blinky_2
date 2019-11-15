@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module Blinky
-  module Interactors
-    module PreFlight
+  module PreFlight
+    module Interactors
       # Ensures that all the file names provide exist and are readable.
       class ValidReadableFiles
         include Interactor
