@@ -7,51 +7,10 @@ require 'blinky/constants'
 # rubocop:disable Layout/SpaceInsideBlockBraces
 describe Blinky::Constants do
   describe 'ENV_VAR_NAMES' do
-    it 'must have TICKETS' do
-      expect(subject::ENV_VAR_NAMES.include?('TICKETS')).to be true
-    end
-    it 'must have USERS' do
-      expect(subject::ENV_VAR_NAMES.include?('USERS')).to be true
-    end
-    it 'must have ORGANISATIONS' do
-      expect(subject::ENV_VAR_NAMES.include?('ORGANISATIONS')).to be true
-    end
+    it('must have TICKETS') {expect(subject::ENV_VAR_NAMES.include?('TICKETS')).to be true}
+    it('must have USERS') {expect(subject::ENV_VAR_NAMES.include?('USERS')).to be true}
+    it('must have ORGANIZATIONS') {expect(subject::ENV_VAR_NAMES.include?('ORGANIZATIONS')).to be true}
   end
 
-  describe 'for MESSAGES' do
-    context 'not_present key value' do
-      it {expect(subject::MESSAGES[:not_present]).to eq('environment variable is not present')}
-    end
-    context 'not_usable key value' do
-      it {expect(subject::MESSAGES[:not_usable]).to eq('environment variable is blank')}
-    end
-    context 'not_readable key value' do
-      it {expect(subject::MESSAGES[:not_readable]).to eq('does not name a readable file')}
-    end
-    context 'not_found key value' do
-      it {expect(subject::MESSAGES[:not_found]).to eq('does not name an existing file')}
-    end
-    context 'not_readable key value' do
-      it {expect(subject::MESSAGES[:not_readable]).to eq('does not name a readable file')}
-    end
-    context 'file_error key value' do
-      it {expect(subject::MESSAGES[:file_error]).to eq('caused an exception: ')}
-    end
-    context 'invalid_json key value' do
-      it {expect(subject::MESSAGES[:invalid_json]).to eq('is not valid json')}
-    end
-  end
-
-  describe 'for SCHEMAS' do
-    context 'ticket key' do
-      it {expect(subject::SCHEMAS[:ticket]).to_not be nil}
-    end
-    context 'user key' do
-      it {expect(subject::SCHEMAS[:user]).to_not be nil}
-    end
-    context 'organization key' do
-      it {expect(subject::SCHEMAS[:organization]).to_not be nil}
-    end
-  end
 end
 # rubocop:enable Layout/SpaceInsideBlockBraces

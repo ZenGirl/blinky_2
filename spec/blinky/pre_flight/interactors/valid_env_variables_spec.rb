@@ -3,66 +3,57 @@
 require 'spec/spec_helper'
 
 require 'blinky/constants'
+require 'blinky/utils'
 require 'blinky/pre_flight/interactors/valid_env_variables'
 
 # We're going to disable rubocop messages as they clutter up the spec with '~' in RubyMine
 # rubocop:disable Layout/SpaceInsideBlockBraces
 describe Blinky::PreFlight::Interactors::ValidEnvVariables do
-  let(:tickets_name) {'TICKETS'}
-  let(:users_name) {'USERS'}
-  let(:organisations_name) {'ORGANISATIONS'}
+  def raises_interactor_failure(env_var, env_value, suffix)
+    ENV[env_var] = env_value
+    expect {subject.send(:validate_env_var, env_var)}.to raise_error(Interactor::Failure)
+    expect(subject.context.success?).to be false
+    expect(subject.context.error).to eq "Error: #{env_var} environment variable #{suffix}"
+  end
+
+  def no_interactor_failure(env_var, env_value)
+    ENV[env_var] = env_value
+    expect {subject.send(:validate_env_var, env_var)}.to_not raise_error(Interactor::Failure)
+    expect(subject.context.error).to be nil
+    expect(subject.context.success?).to be true
+  end
+
   describe 'Private Methods' do
     describe 'Raises interactor failure for' do
-      let(:is_not_present) {'is not present'}
-      let(:is_blank) {'is blank'}
-
-      def formatted_message(env_var, suffix)
-        "The #{env_var} environment variable #{suffix}"
-      end
-
-      def raises_interactor_failure(env_var, env_value, msg_suffix)
-        ENV[env_var] = env_value
-        expect {subject.send(:validate_env_var, env_var)}.to raise_error(Interactor::Failure)
-        expect(subject.context.success?).to be false
-        expect(subject.context.error).to eq formatted_message(env_var, msg_suffix)
-      end
-
-      context 'each env var TICKETS, USERS and ORGANISATIONS' do
-        context 'if value is nil then context.error' do
-          it {raises_interactor_failure(tickets_name, nil, is_not_present)}
-          it {raises_interactor_failure(users_name, nil, is_not_present)}
-          it {raises_interactor_failure(organisations_name, nil, is_not_present)}
+      context 'each env var TICKETS, USERS and ORGANIZATIONS' do
+        context 'if value is nil then context.error message' do
+          it {raises_interactor_failure('TICKETS', nil, 'is not present')}
+          it {raises_interactor_failure('USERS', nil, 'is not present')}
+          it {raises_interactor_failure('ORGANIZATIONS', nil, 'is not present')}
         end
         context 'or if value is empty string then context.error' do
-          it {raises_interactor_failure(tickets_name, '', is_blank)}
-          it {raises_interactor_failure(users_name, '', is_blank)}
-          it {raises_interactor_failure(organisations_name, '', is_blank)}
+          it {raises_interactor_failure('TICKETS', '', 'is blank')}
+          it {raises_interactor_failure('USERS', '', 'is blank')}
+          it {raises_interactor_failure('ORGANIZATIONS', '', 'is blank')}
         end
         context 'or if value is blank after stripping then context.error' do
-          it {raises_interactor_failure(tickets_name, '     ', is_blank)}
-          it {raises_interactor_failure(users_name, '     ', is_blank)}
-          it {raises_interactor_failure(organisations_name, '     ', is_blank)}
+          it {raises_interactor_failure('TICKETS', '     ', 'is blank')}
+          it {raises_interactor_failure('USERS', '     ', 'is blank')}
+          it {raises_interactor_failure('ORGANIZATIONS', '     ', 'is blank')}
         end
       end
     end
 
     describe 'Does not raise interactor failure for' do
-      def no_interactor_failure(env_var, env_value)
-        ENV[env_var] = env_value
-        expect {subject.send(:validate_env_var, env_var)}.to_not raise_error(Interactor::Failure)
-        expect(subject.context.error).to be nil
-        expect(subject.context.success?).to be true
-      end
-
-      context 'each env var TICKETS, USERS and ORGANISATIONS' do
+      context 'each env var TICKETS, USERS and ORGANIZATIONS' do
         context 'if TICKETS is present and not blank then success' do
-          it {no_interactor_failure(tickets_name, 'Dummy')}
+          it {no_interactor_failure('TICKETS', 'Dummy')}
         end
         context 'if USERS is present and not blank and success' do
-          it {no_interactor_failure(users_name, 'Dummy')}
+          it {no_interactor_failure('USERS', 'Dummy')}
         end
-        context 'if ORGANISATIONS is present and not blank and success' do
-          it {no_interactor_failure(organisations_name, 'Dummy')}
+        context 'if ORGANIZATIONS is present and not blank and success' do
+          it {no_interactor_failure('ORGANIZATIONS', 'Dummy')}
         end
       end
     end
@@ -71,35 +62,29 @@ describe Blinky::PreFlight::Interactors::ValidEnvVariables do
   describe '#call' do
     context 'when all env vars are present and valid then success' do
       before do
-        ENV[tickets_name]       = 'Dummy Tickets'
-        ENV[users_name]         = 'Dummy Users'
-        ENV[organisations_name] = 'Dummy Organisations'
+        ENV['TICKETS']       = 'Dummy Tickets'
+        ENV['USERS']         = 'Dummy Users'
+        ENV['ORGANIZATIONS'] = 'Dummy Organizations'
         subject.call
       end
 
       it {expect(subject.context.success?).to be true}
       context 'and tickets_file' do
-        # Sigh. Just to get rid of those annoying twiddles for the context vars
-        # noinspection RubyResolve
         it {expect(subject.context.tickets_file).to eq 'Dummy Tickets'}
       end
       context 'and users_file' do
-        # Sigh. Just to get rid of those annoying twiddles for the context vars
-        # noinspection RubyResolve
         it {expect(subject.context.users_file).to eq 'Dummy Users'}
       end
-      context 'and organisations_file' do
-        # Sigh. Just to get rid of those annoying twiddles for the context vars
-        # noinspection RubyResolve
-        it {expect(subject.context.organisations_file).to eq 'Dummy Organisations'}
+      context 'and organizations_file' do
+        it {expect(subject.context.organizations_file).to eq 'Dummy Organizations'}
       end
     end
 
     context 'and if any env value is not usable then' do
       before do
-        ENV[tickets_name]       = nil
-        ENV[users_name]         = nil
-        ENV[organisations_name] = nil
+        ENV['TICKETS']       = nil
+        ENV['USERS']         = nil
+        ENV['ORGANIZATIONS'] = nil
       end
 
       it 'raises error and fails' do
