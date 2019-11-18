@@ -7,14 +7,15 @@ module Blinky
     # rubocop:disable Layout/AlignHash
     # Disabled because it shows irritating message which provides no perceivable benefit
     ERROR_MESSAGES = {
-      env_var_not_present:       'is not present',
-      env_var_is_blank:          'is blank',
-      env_var_file_not_found:    'does not name an existing file',
-      env_var_file_not_readable: 'does not name a readable file',
-      env_var_file_error:        'file caused an exception: ',
-      env_var_file_too_big:      'file is too big',
-      env_var_invalid_json:      'is not valid json',
-      env_var_non_utf8:          'has non UTF-8 chars'
+      env_var_not_present:        'is not present',
+      env_var_is_blank:           'is blank',
+      env_var_file_not_found:     'does not name an existing file',
+      env_var_file_not_readable:  'does not name a readable file',
+      env_var_file_error:         'file caused an exception: ',
+      env_var_file_too_big:       'file is too big',
+      env_var_invalid_json:       'is not valid json',
+      env_var_non_utf8:           'has non UTF-8 chars',
+      row_keys_must_match_schema: 'row does not match schema'
     }.freeze
     # rubocop:enable Layout/AlignHash
 
@@ -38,6 +39,6 @@ module Blinky
     # rubocop:enable Style/MutableConstant, Style/RegexpLiteral
 
     # Should be changeable via command line
-    MAX_FILE_SIZE = 200_000 # bytes
+    MAX_FILE_SIZE    = 200_000 # bytes
   end
 end

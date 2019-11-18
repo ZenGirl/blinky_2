@@ -12,10 +12,23 @@ module Blinky
         include Utils
 
         def call
-
+          # Suppress those annoying twiddles for the file name
+          # noinspection RubyResolve
+          load_and_validate(context.users_file)
         end
 
         private
+
+        def load_and_validate(file_name)
+          # Suppress the fact that the file_name is implicit as it's been validated earlier.
+          # noinspection RubyResolve
+          json = MultiJson.load(IO.read(file_name), symbolize_keys: true)
+          json.each do |row|
+            valid_row = Models::User.new(row)
+          end
+        rescue MultiJson::ParseError => e
+          fail_with_msg('TICKETS', :env_var_invalid_json, file_name, e.message)
+        end
 
       end
     end

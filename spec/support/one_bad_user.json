@@ -1,0 +1,23 @@
+[
+  {
+    "_id": "not an integer",
+    "url": "not a url",
+    "external_id": "74341f74-9c79-49d5-9611-87ef9b6eb75f",
+    "name": 123,
+    "alias": 234,
+    "created_at": "not a date",
+    "active": "gumby",
+    "verified": "gonzo",
+    "shared": "Hunter",
+    "locale": "Thompson",
+    "timezone": "Not a real place",
+    "last_login_at": "not a date",
+    "email": "not an email",
+    "phone": "not a phone number",
+    "signature": 3456,
+    "organization_id": null,
+    "tags": [ 4567, 5678 ],
+    "suspended": "not a boolean",
+    "role": "Pelosi"
+  }
+]
