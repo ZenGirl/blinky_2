@@ -4,6 +4,7 @@ require 'spec/spec_helper'
 
 require 'blinky/constants'
 require 'blinky/utils'
+require 'blinky/matcher'
 require 'blinky/models/invalid_keys_exception'
 require 'blinky/models/user'
 
