@@ -43,39 +43,107 @@ module Blinky
         raise InvalidKeysException, error_message unless row.keys == SCHEMA.keys
       end
 
+      # rubocop:disable Layout/AlignHash
+      SCHEMA_TABLE = {
+        string:   :must_be_string,
+        guid:     :must_match_guid,
+        integer:  :must_be_integer,
+        url:      :must_be_url,
+        datetime: :must_be_datetime,
+        boolean:  :must_be_boolean,
+        locale:   :must_be_string,
+        timezone: :must_be_timezone,
+        email:    :must_be_email,
+        regex:    :must_be_regex,
+        array:    :must_be_array
+      }.freeze
+      # rubocop:enable Layout/AlignHash
+
+      def must_be_string(value)
+        value.is_a?(String)
+      end
+
+      def must_match_guid(value)
+        value.match(/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/)
+      end
+
+      def must_be_integer(value)
+        value.match(/[\d]+/)
+      end
+
+      def must_be_url(value)
+        value.match(%r{https?://[\S]+})
+      end
+
+      def must_be_datetime(value)
+        begin
+          Time.parse(value)
+        rescue ArgumentError
+          nil
+        end
+      end
+
+      def must_be_boolean(value)
+        !!value == value
+      end
+
+      def must_be_locale(value)
+        value.is_a?(String)
+      end
+
+      def must_be_timezone(value)
+        value.is_a?(String)
+      end
+
+      def must_be_email(value)
+        value.match(/\A([\w+\-]\.?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i)
+      end
+
+      def must_be_regex(value)
+        value.match(SCHEMA[key][:match])
+      end
+
+      def must_be_array(value)
+        value.is_a?(Array)
+      end
+
       def row_values_must_match_schema(row)
         SCHEMA.keys.each do |key|
           value = row[key]
-          result = case SCHEMA[key][:type]
-                   when :string
-                     value.is_a?(String)
-                   when :guid
-                     value.match(/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/)
-                   when :integer
-                     row[key].match(/[\d]+/)
-                   when :url
-                     row[key].match(%r{https?://[\S]+})
-                   when :datetime
-                     begin
-                       Time.parse(row[key])
-                     rescue ArgumentError
-                       nil
-                     end
-                   when :boolean
-                     !!row[key] == row[key]
-                   when :locale
-                     row[key].is_a?(String)
-                   when :timezone
-                     row[key].is_a?(String)
-                   when :email
-                     row[key].match(/\A([\w+\-]\.?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i)
-                   when :regex
-                     row[key].match(SCHEMA[key][:match])
-                   when :array
-                     row[key].is_a?(Array)
-                   else
-                     raise InvalidKeysException, "Unknown key [#{SCHEMA[key][:type]}]"
-                   end
+          result = send(SCHEMA_TABLE[key], value)
+        end
+        # SCHEMA.keys.each do |key|
+        #   value  = row[key]
+        #   result = case SCHEMA[key][:type]
+        #            when :string
+        #              value.is_a?(String)
+        #            when :guid
+        #              value.match(/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/)
+        #            when :integer
+        #              value.match(/[\d]+/)
+        #            when :url
+        #              value.match(%r{https?://[\S]+})
+        #            when :datetime
+        #              begin
+        #                Time.parse(value)
+        #              rescue ArgumentError
+        #                nil
+        #              end
+        #            when :boolean
+        #              !!value == value
+        #            when :locale
+        #              value.is_a?(String)
+        #            when :timezone
+        #              value.is_a?(String)
+        #            when :email
+        #              value.match(/\A([\w+\-]\.?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i)
+        #            when :regex
+        #              value.match(SCHEMA[key][:match])
+        #            when :array
+        #              value.is_a?(Array)
+        #            else
+        #              raise InvalidKeysException, "Unknown key [#{SCHEMA[key][:type]}]"
+        #            end
           if result.nil? || !result
             @error_count += 1
             raise InvalidKeysException, Constants::ERROR_MESSAGES[:row_keys_must_match_schema]
