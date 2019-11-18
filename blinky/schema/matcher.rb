@@ -23,7 +23,7 @@ module Blinky
       }.freeze
       # rubocop:enable Layout/AlignHash
 
-      def initialize(schema)
+      def initialize(schema = {})
         @schema      = schema
         @error_count = 0
       end
@@ -38,12 +38,20 @@ module Blinky
           result       = value.nil? ? false : send(SCHEMA_TABLE[@schema[key][:type]], key, value)
           @error_count += 1 if result.nil? || !result
         end
-        raise Models::InvalidKeysException, Constants::ERROR_MESSAGES[:row_keys_must_match_schema] if @error_count > 0
+        raise Models::InvalidKeysException, Constants::ERROR_MESSAGES[:row_keys_must_match_schema] if @error_count.positive?
       end
 
       private
 
+      # Note: nils are allowed as values unless incoming schema has key :no_nils
+
       def must_be_string(key, value)
+        return false if key.nil?
+        return false if @schema[key].nil?
+
+        no_nils = @schema[key][:no_nils] == nil ? true : @schema[key][:no_nils]
+        return false if no_nils && value.nil?
+
         value.is_a?(String)
       end
 
