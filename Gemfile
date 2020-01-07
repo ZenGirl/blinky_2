@@ -9,4 +9,4 @@ group :test do
   gem 'simplecov', '=0.16.1', require: false
 end
 
-gem 'JFormalize', git: 'https://github.com/ZenGirl/JFormalize.git'
+gem 'JFormalize', '=0.2.0', git: 'https://github.com/ZenGirl/JFormalize.git'

@@ -5,11 +5,6 @@ require 'spec_helper'
 
 require 'interactor'
 
-require 'j_formalize/constants'
-require 'j_formalize/interactors/common_context'
-require 'j_formalize/interactors/pre_load'
-require 'j_formalize/interactors/objectify'
-require 'j_formalize/interactors/formalize'
 require 'j_formalize'
 
 require_relative '../../../../blinky/constants'
