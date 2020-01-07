@@ -4,26 +4,34 @@ module Blinky
   module PreFlight
     module Interactors
       # Ensures that the files provide are actually JSON and loads formalized objects
-      class ValidJsonFiles
+      class Formalize
         include Interactor
         include Utils
 
-        # noinspection RubyResolve
         def call
-          context.tickets       = validate_and_formalize(:tickets, context.tickets_file)
-          context.users         = validate_and_formalize(:users, context.users_file)
-          context.organizations = validate_and_formalize(:organizations, context.organizations_file)
+          data = context.data
+          data.keys.each do |key|
+            data[key][:formalized_objects] = validate_and_formalize key, data[key][:file]
+          end
         end
 
         private
 
-        def validate_and_formalize(key, file_name)
-          ctx    = {
-              json_string: load_file(key, file_name),
-              max_size:    nil,
-              schema:      Blinky::Constants::SCHEMAS[key]
+        def formalize_context(key, file_name)
+          {
+            json_string: load_file(key, file_name),
+            max_size:    nil,
+            schema:      Blinky::Constants::SCHEMAS[key]
           }
-          result = ::JFormalize::Engine.call(ctx)
+        end
+
+        def formalize(key, file_name)
+          ctx = formalize_context(key, file_name)
+          ::JFormalize::Engine.call(ctx)
+        end
+
+        def validate_and_formalize(key, file_name)
+          result = formalize(key, file_name)
           context.fail!(message: "#{key} #{file_name} #{result.message}") unless result.success?
           result.formalized_objects
         end

@@ -11,12 +11,21 @@ module Blinky
         include Interactor
         include Utils
 
-        # Sigh. Just to get rid of those annoying twiddles for the context vars
-        # noinspection RubyResolve
         def call
-          context.tickets_file       = validate_env_var('TICKETS')
-          context.users_file         = validate_env_var('USERS')
-          context.organizations_file = validate_env_var('ORGANIZATIONS')
+          context.data = {
+            tickets:       {
+              env:  'TICKETS',
+              file: validate_env_var('TICKETS')
+            },
+            users:         {
+              env:  'USERS',
+              file: validate_env_var('USERS')
+            },
+            organizations: {
+              env:  'ORGANIZATIONS',
+              file: validate_env_var('ORGANIZATIONS')
+            }
+          }
         end
 
         private

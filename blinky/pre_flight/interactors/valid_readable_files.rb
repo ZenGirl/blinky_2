@@ -8,12 +8,11 @@ module Blinky
         include Interactor
         include Utils
 
-        # Just to get rid of those annoying twiddles for the context vars
-        # noinspection RubyResolve
         def call
-          name_must_be_a_readable_file 'TICKETS', context.tickets_file
-          name_must_be_a_readable_file 'USERS', context.users_file
-          name_must_be_a_readable_file 'ORGANIZATIONS', context.organizations_file
+          data = context.data
+          data.keys.each do |key|
+            name_must_be_a_readable_file data[key][:env], data[key][:file]
+          end
         end
 
         private
@@ -25,15 +24,21 @@ module Blinky
         end
 
         def must_exist(env_var, file_name)
-          context.fail!(message: "#{env_var} #{file_name} #{err(:env_var_file_not_found)}") unless File.exist? file_name
+          return if File.exist? file_name
+
+          context.fail!(message: "#{env_var} #{file_name} #{err(:env_var_file_not_found)}")
         end
 
         def must_be_a_file(env_var, file_name)
-          context.fail!(message: "#{env_var} #{file_name} #{err(:env_var_file_not_readable)}") unless File.file? file_name
+          return if File.file? file_name
+
+          context.fail!(message: "#{env_var} #{file_name} #{err(:env_var_file_not_readable)}")
         end
 
         def must_be_readable(env_var, file_name)
-          context.fail!(message: "#{env_var} #{file_name} #{err(:env_var_file_not_readable)}") unless File.readable? file_name
+          return if File.readable? file_name
+
+          context.fail!(message: "#{env_var} #{file_name} #{err(:env_var_file_not_readable)}")
         end
       end
     end

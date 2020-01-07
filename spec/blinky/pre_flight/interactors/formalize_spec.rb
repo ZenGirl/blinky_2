@@ -10,9 +10,9 @@ require 'j_formalize'
 require_relative '../../../../blinky/constants'
 require_relative '../../../../blinky/utils'
 
-require_relative '../../../../blinky/pre_flight/interactors/valid_json_files'
+require_relative '../../../../blinky/pre_flight/interactors/formalize'
 
-describe Blinky::PreFlight::Interactors::ValidJsonFiles do
+describe Blinky::PreFlight::Interactors::Formalize do
   describe 'private methods' do
     let(:file_name) { '[irrelevant file name]' }
 
@@ -45,7 +45,6 @@ describe Blinky::PreFlight::Interactors::ValidJsonFiles do
     context '#validate_and_formalize' do
       context 'should fail' do
         def validate_raises_error(key, file_name, msg)
-          objects = {}
           expect { subject.send(:validate_and_formalize, key, file_name) }.to raise_error(Interactor::Failure)
           expect(subject.context.success?).to be false
           expect(subject.context.message).to eq msg
@@ -79,33 +78,50 @@ describe Blinky::PreFlight::Interactors::ValidJsonFiles do
   describe '#call' do
     context 'when all env vars are present and valid then success' do
       before do
-        subject.context.tickets_file       = 'spec/support/tickets_test.json'
-        subject.context.users_file         = 'spec/support/users_test.json'
-        subject.context.organizations_file = 'spec/support/organizations_test.json'
+        subject.context.data = {
+          tickets:       {
+            env:  'TICKETS',
+            file: 'spec/support/tickets_test.json'
+          },
+          users:         {
+            env:  'USERS',
+            file: 'spec/support/users_test.json'
+          },
+          organizations: {
+            env:  'ORGANIZATIONS',
+            file: 'spec/support/organizations_test.json'
+          }
+        }
         subject.call
       end
 
       it { expect(subject.context.success?).to be true }
       context 'and tickets_file' do
-        it {expect(subject.context.tickets).to_not be nil}
-        it {expect(subject.context.tickets.is_a?(Array)).to be true}
-        it {expect(subject.context.tickets.size).to eq 2}
-        it {expect(subject.context.tickets[0][:_id]).to eq '436bf9b0-1147-4c0a-8439-6f79833bff5b'}
-        it {expect(subject.context.tickets[1][:_id]).to eq '1a227508-9f39-427c-8f57-1b72f3fab87c'}
+        let(:data) { subject.context.data[:tickets] }
+        let(:formalized_objects) { subject.context.data[:tickets][:formalized_objects] }
+        it { expect(data).to_not be nil }
+        it { expect(formalized_objects.is_a?(Array)).to be true }
+        it { expect(formalized_objects.size).to eq 2 }
+        it { expect(formalized_objects[0][:_id]).to eq '436bf9b0-1147-4c0a-8439-6f79833bff5b' }
+        it { expect(formalized_objects[1][:_id]).to eq '1a227508-9f39-427c-8f57-1b72f3fab87c' }
       end
       context 'and users_file' do
-        it {expect(subject.context.users).to_not be nil}
-        it {expect(subject.context.users.is_a?(Array)).to be true}
-        it {expect(subject.context.users.size).to eq 2}
-        it {expect(subject.context.users[0][:_id]).to eq 1}
-        it {expect(subject.context.users[1][:_id]).to eq 2}
+        let(:data) { subject.context.data[:users] }
+        let(:formalized_objects) { subject.context.data[:users][:formalized_objects] }
+        it { expect(data).to_not be nil }
+        it { expect(formalized_objects.is_a?(Array)).to be true }
+        it { expect(formalized_objects.size).to eq 2 }
+        it { expect(formalized_objects[0][:_id]).to eq 1 }
+        it { expect(formalized_objects[1][:_id]).to eq 2 }
       end
       context 'and organizations_file' do
-        it {expect(subject.context.organizations).to_not be nil}
-        it {expect(subject.context.organizations.is_a?(Array)).to be true}
-        it {expect(subject.context.organizations.size).to eq 2}
-        it {expect(subject.context.organizations[0][:_id]).to eq 101}
-        it {expect(subject.context.organizations[1][:_id]).to eq 102}
+        let(:data) { subject.context.data[:organizations] }
+        let(:formalized_objects) { subject.context.data[:organizations][:formalized_objects] }
+        it { expect(data).to_not be nil }
+        it { expect(formalized_objects.is_a?(Array)).to be true }
+        it { expect(formalized_objects.size).to eq 2 }
+        it { expect(formalized_objects[0][:_id]).to eq 101 }
+        it { expect(formalized_objects[1][:_id]).to eq 102 }
       end
     end
   end

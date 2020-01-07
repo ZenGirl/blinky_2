@@ -9,7 +9,7 @@ module Blinky
 
         organize Interactors::ValidEnvVariables,
                  Interactors::ValidReadableFiles,
-                 Interactors::ValidJsonFiles
+                 Interactors::Formalize
       end
     end
   end

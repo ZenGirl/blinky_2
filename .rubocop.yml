@@ -1,3 +1,7 @@
+AllCops:
+  Exclude:
+    - 'Gemfile'
+    - 'spec/**/*'
 Metrics/LineLength:
   Enabled: true
   Severity: warning
@@ -7,3 +11,7 @@ Metrics/BlockLength:
 Metrics/MethodLength:
   Enabled: true
   Max: 20
+Layout/AlignHash:
+  Enabled: false
+Layout/SpaceInsideHashLiteralBraces:
+  Enabled: false

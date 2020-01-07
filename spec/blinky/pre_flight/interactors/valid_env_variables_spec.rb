@@ -7,8 +7,6 @@ require_relative '../../../../blinky/utils'
 
 require_relative '../../../../blinky/pre_flight/interactors/valid_env_variables'
 
-# We're going to disable rubocop messages as they clutter up the spec with '~' in RubyMine
-# rubocop:disable Layout/SpaceInsideBlockBraces
 describe Blinky::PreFlight::Interactors::ValidEnvVariables do
   def raises_interactor_failure(env_var, env_value, suffix)
     ENV[env_var] = env_value
@@ -70,13 +68,13 @@ describe Blinky::PreFlight::Interactors::ValidEnvVariables do
 
       it {expect(subject.context.success?).to be true}
       context 'and tickets_file' do
-        it {expect(subject.context.tickets_file).to eq 'Dummy Tickets'}
+        it {expect(subject.context.data[:tickets][:file]).to eq 'Dummy Tickets'}
       end
       context 'and users_file' do
-        it {expect(subject.context.users_file).to eq 'Dummy Users'}
+        it {expect(subject.context.data[:users][:file]).to eq 'Dummy Users'}
       end
       context 'and organizations_file' do
-        it {expect(subject.context.organizations_file).to eq 'Dummy Organizations'}
+        it {expect(subject.context.data[:organizations][:file]).to eq 'Dummy Organizations'}
       end
     end
 
@@ -94,4 +92,3 @@ describe Blinky::PreFlight::Interactors::ValidEnvVariables do
     end
   end
 end
-# rubocop:enable Layout/SpaceInsideBlockBraces

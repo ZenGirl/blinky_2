@@ -4,12 +4,12 @@ require 'spec_helper'
 
 require 'interactor'
 
-require 'j_formalize/constants'
-require 'j_formalize/interactors/common_context'
-require 'j_formalize/interactors/pre_load'
-require 'j_formalize/interactors/objectify'
-require 'j_formalize/interactors/formalize'
-require 'j_formalize'
+#require 'j_formalize/constants'
+#require 'j_formalize/interactors/common_context'
+#require 'j_formalize/interactors/pre_load'
+#require 'j_formalize/interactors/objectify'
+#require 'j_formalize/interactors/formalize'
+#require 'j_formalize'
 
 require_relative '../../../../blinky/constants'
 require_relative '../../../../blinky/utils'
@@ -77,9 +77,20 @@ describe Blinky::PreFlight::Interactors::ValidReadableFiles do
   describe '#call' do
     context 'when all files are readable then success' do
       before do
-        subject.context.tickets_file       = readable_file
-        subject.context.users_file         = readable_file
-        subject.context.organizations_file = readable_file
+        subject.context.data = {
+          tickets:       {
+            env:  'TICKETS',
+            file: readable_file
+          },
+          users:         {
+            env:  'USERS',
+            file: readable_file
+          },
+          organizations: {
+            env:  'ORGANIZATIONS',
+            file: readable_file
+          }
+        }
         subject.call
       end
       it {expect(subject.context.success?).to be true}
@@ -88,9 +99,20 @@ describe Blinky::PreFlight::Interactors::ValidReadableFiles do
     context 'when any file is not readable then ' do
       before do
         File.chmod(0222, unreadable_file)
-        subject.context.tickets_file       = readable_file
-        subject.context.users_file         = unreadable_file
-        subject.context.organizations_file = readable_file
+        subject.context.data = {
+          tickets:       {
+            env:  'TICKETS',
+            file: readable_file
+          },
+          users:         {
+            env:  'USERS',
+            file: unreadable_file
+          },
+          organizations: {
+            env:  'ORGANIZATIONS',
+            file: readable_file
+          }
+        }
       end
       after do
         File.chmod(0644, unreadable_file)
