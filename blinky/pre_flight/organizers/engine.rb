@@ -4,13 +4,12 @@ module Blinky
   module PreFlight
     module Organizers
       # Ensures all pieces are in place before starting actual process
-      class Train
+      class Engine
         include Interactor::Organizer
 
         organize Interactors::ValidEnvVariables,
                  Interactors::ValidReadableFiles,
-                 Interactors::ValidJsonFiles,
-                 Interactors::LoadUsers
+                 Interactors::ValidJsonFiles
       end
     end
   end

@@ -23,10 +23,9 @@ module Blinky
 
         def validate_env_var(env_var)
           result_var = ENV[env_var]
-          fail_with_msg(env_var, :env_var_not_present, ' environment variable', '') if result_var.nil?
-          # ENV will always be a string if present
+          context.fail!(message: "#{env_var} #{err(:env_var_not_present)}") if result_var.nil?
           result_var = ('' + result_var).strip
-          fail_with_msg(env_var, :env_var_is_blank, ' environment variable', '') if result_var.size <= 0
+          context.fail!(message: "#{env_var} #{err(:env_var_is_blank)}") if result_var.size <= 0
           result_var
         end
       end

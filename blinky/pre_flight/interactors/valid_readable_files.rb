@@ -18,26 +18,22 @@ module Blinky
 
         private
 
-        def name_must_be_a_readable_file(env_var, name)
-          must_exist(env_var, name)
-          must_be_a_file(env_var, name)
-          must_be_readable(env_var, name)
+        def name_must_be_a_readable_file(env_var, file_name)
+          must_exist(env_var, file_name)
+          must_be_a_file(env_var, file_name)
+          must_be_readable(env_var, file_name)
         end
 
-        def env_var_msg(name)
-          " environment variable #{name}"
+        def must_exist(env_var, file_name)
+          context.fail!(message: "#{env_var} #{file_name} #{err(:env_var_file_not_found)}") unless File.exist? file_name
         end
 
-        def must_exist(env_var, name)
-          fail_with_msg(env_var, :env_var_file_not_found, env_var_msg(name), '') unless File.exist? name
+        def must_be_a_file(env_var, file_name)
+          context.fail!(message: "#{env_var} #{file_name} #{err(:env_var_file_not_readable)}") unless File.file? file_name
         end
 
-        def must_be_a_file(env_var, name)
-          fail_with_msg(env_var, :env_var_file_not_readable, env_var_msg(name), '') unless File.file? name
-        end
-
-        def must_be_readable(env_var, name)
-          fail_with_msg(env_var, :env_var_file_not_readable, env_var_msg(name), '') unless File.readable? name
+        def must_be_readable(env_var, file_name)
+          context.fail!(message: "#{env_var} #{file_name} #{err(:env_var_file_not_readable)}") unless File.readable? file_name
         end
       end
     end

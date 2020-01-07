@@ -1,98 +1,117 @@
 # rubocop:disable Style/FrozenStringLiteralComment
 # Disabled, because we have to fiddle with strings that *may* be frozen
 
-require 'spec/spec_helper'
+require 'spec_helper'
 
-require 'blinky/constants'
-require 'blinky/utils'
-require 'blinky/pre_flight/interactors/valid_json_files'
+require 'interactor'
 
-# We're going to disable rubocop messages as they clutter up the spec with '~' in RubyMine
-# rubocop:disable Layout/SpaceInsideBlockBraces
+require 'j_formalize/constants'
+require 'j_formalize/interactors/common_context'
+require 'j_formalize/interactors/pre_load'
+require 'j_formalize/interactors/objectify'
+require 'j_formalize/interactors/formalize'
+require 'j_formalize'
+
+require_relative '../../../../blinky/constants'
+require_relative '../../../../blinky/utils'
+
+require_relative '../../../../blinky/pre_flight/interactors/valid_json_files'
+
 describe Blinky::PreFlight::Interactors::ValidJsonFiles do
   describe 'private methods' do
-    let(:file_name) {'[irrelevant file name]'}
-    context '#must_not_be_too_big' do
-      context 'should fail if' do
-        it 'file_size > max size' do
-          max_size = Blinky::Constants::MAX_FILE_SIZE
-          allow(File).to receive(:size).with(file_name).and_return(max_size + 1)
-          expect {subject.send(:must_not_be_too_big, file_name)}.to raise_error(Interactor::Failure)
-          expect(subject.context.success?).to be false
-          expect(subject.context.error).to eq "Error: #{file_name} file is too big"
-        end
-      end
-      context 'should succeed if' do
-        it 'file size < max size' do
-          max_size  = Blinky::Constants::MAX_FILE_SIZE
-          allow(File).to receive(:size).with(file_name).and_return(max_size)
-          expect {subject.send(:must_not_be_too_big, file_name)}.not_to raise_error(Interactor::Failure)
-          expect(subject.context.success?).to be true
-        end
-      end
-    end
+    let(:file_name) { '[irrelevant file name]' }
 
     context '#load_file' do
       context 'should fail' do
-
-        def raises_error(file_name, msg)
-          expect {subject.send(:load_file, file_name)}.to raise_error(Interactor::Failure)
+        def load_raises_error(key, file_name, msg)
+          expect { subject.send(:load_file, key, file_name) }.to raise_error(Interactor::Failure)
           expect(subject.context.success?).to be false
-          expect(subject.context.error).to eq msg
+          expect(subject.context.message).to eq msg
         end
 
         it 'if IOError raised' do
           allow(IO).to receive(:read).and_raise(IOError, 'Dummy error')
-          raises_error(file_name, 'Error: [irrelevant file name] file caused an exception: Dummy error')
+          load_raises_error(:tickets, file_name, 'tickets [irrelevant file name] caused an error Dummy error')
         end
 
         it 'if StandardError raised' do
           allow(IO).to receive(:read).and_raise(StandardError, 'Dummy error')
-          raises_error(file_name, 'Error: [irrelevant file name] file caused an exception: Dummy error')
-        end
-
-        it 'if returned string is empty (no newlines)' do
-          allow(IO).to receive(:read).and_return('      ')
-          raises_error(file_name, 'Error: [irrelevant file name] is not valid json')
-        end
-
-        it 'if returned string is empty (with newlines)' do
-          allow(IO).to receive(:read).and_return("\n\n\n\n\n")
-          raises_error(file_name, 'Error: [irrelevant file name] is not valid json')
-        end
-
-        it 'if returned string has non UTF-8 chars in it' do
-          allow(IO).to receive(:read).and_return('hellÔ!'.encode('ISO-8859-1'))
-          raises_error(file_name, 'Error: [irrelevant file name] has non UTF-8 chars')
+          load_raises_error(:tickets, file_name, 'tickets [irrelevant file name] caused an error Dummy error')
         end
       end
       context 'should succeed' do
         it 'if string is non blank and has only UTF-8 chars in it' do
           allow(IO).to receive(:read).and_return('not json but valid UTF-8 string')
-          expect {subject.send(:load_file, file_name)}.not_to raise_error(Interactor::Failure)
+          expect { subject.send(:load_file, file_name) }.not_to raise_error(Interactor::Failure)
           expect(subject.context.success?).to be true
         end
       end
     end
-
-    context '#must_match_regex' do
+    context '#validate_and_formalize' do
       context 'should fail' do
-        it 'if file contents are not valid json' do
-          json = 'gumby is not valid'
-          expect {subject.send(:must_match_regex, file_name, json)}.to raise_error(Interactor::Failure)
+        def validate_raises_error(key, file_name, msg)
+          objects = {}
+          expect { subject.send(:validate_and_formalize, key, file_name) }.to raise_error(Interactor::Failure)
           expect(subject.context.success?).to be false
-          expect(subject.context.error).to eq 'Error: [irrelevant file name] is not valid json'
+          expect(subject.context.message).to eq msg
+        end
+
+        it 'if returned string is empty (no newlines)' do
+          allow(IO).to receive(:read).and_return('      ')
+          validate_raises_error(:tickets, file_name, 'tickets [irrelevant file name] json_string must not be empty')
+        end
+
+        it 'if returned string is empty (with newlines)' do
+          allow(IO).to receive(:read).and_return("  \n  \n\n")
+          validate_raises_error(:tickets, file_name, 'tickets [irrelevant file name] json_string must not be empty')
+        end
+
+        it 'if returned string has non UTF-8 chars in it' do
+          allow(IO).to receive(:read).and_return('hellÔ!'.encode('ISO-8859-1'))
+          validate_raises_error(:tickets, file_name, 'tickets [irrelevant file name] json_string has non UTF-8 characters')
         end
       end
-
       context 'should succeed' do
-        it 'if file contents are valid json' do
-          json = '[{"a":"aaa","b":"bbb"},{"c":"ccc"}]'
-          expect {subject.send(:must_match_regex, file_name, json)}.not_to raise_error(Interactor::Failure)
+        it 'if string is non blank and has only UTF-8 chars in it' do
+          allow(IO).to receive(:read).and_return('not json but valid UTF-8 string')
+          expect { subject.send(:validate_and_formalize, file_name) }.not_to raise_error(Interactor::Failure)
           expect(subject.context.success?).to be true
         end
       end
     end
   end
+
+  describe '#call' do
+    context 'when all env vars are present and valid then success' do
+      before do
+        subject.context.tickets_file       = 'spec/support/tickets_test.json'
+        subject.context.users_file         = 'spec/support/users_test.json'
+        subject.context.organizations_file = 'spec/support/organizations_test.json'
+        subject.call
+      end
+
+      it { expect(subject.context.success?).to be true }
+      context 'and tickets_file' do
+        it {expect(subject.context.tickets).to_not be nil}
+        it {expect(subject.context.tickets.is_a?(Array)).to be true}
+        it {expect(subject.context.tickets.size).to eq 2}
+        it {expect(subject.context.tickets[0][:_id]).to eq '436bf9b0-1147-4c0a-8439-6f79833bff5b'}
+        it {expect(subject.context.tickets[1][:_id]).to eq '1a227508-9f39-427c-8f57-1b72f3fab87c'}
+      end
+      context 'and users_file' do
+        it {expect(subject.context.users).to_not be nil}
+        it {expect(subject.context.users.is_a?(Array)).to be true}
+        it {expect(subject.context.users.size).to eq 2}
+        it {expect(subject.context.users[0][:_id]).to eq 1}
+        it {expect(subject.context.users[1][:_id]).to eq 2}
+      end
+      context 'and organizations_file' do
+        it {expect(subject.context.organizations).to_not be nil}
+        it {expect(subject.context.organizations.is_a?(Array)).to be true}
+        it {expect(subject.context.organizations.size).to eq 2}
+        it {expect(subject.context.organizations[0][:_id]).to eq 101}
+        it {expect(subject.context.organizations[1][:_id]).to eq 102}
+      end
+    end
+  end
 end
-# rubocop:enable Layout/SpaceInsideBlockBraces

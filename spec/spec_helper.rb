@@ -6,8 +6,6 @@ SimpleCov.start
 
 require 'rspec'
 require 'interactor'
-require 'oj'
-require 'multi_json'
 require 'awesome_print'
 
 $LOAD_PATH << File.expand_path('.')

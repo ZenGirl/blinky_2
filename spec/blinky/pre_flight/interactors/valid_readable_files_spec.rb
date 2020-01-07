@@ -1,26 +1,34 @@
 # frozen_string_literal: true
 
-require 'spec/spec_helper'
+require 'spec_helper'
 
-require 'blinky/constants'
-require 'blinky/utils'
-require 'blinky/pre_flight/interactors/valid_readable_files'
+require 'interactor'
 
-# We're going to disable rubocop messages as they clutter up the spec with '~' in RubyMine
-# rubocop:disable Metrics/LineLength, Layout/SpaceInsideBlockBraces
+require 'j_formalize/constants'
+require 'j_formalize/interactors/common_context'
+require 'j_formalize/interactors/pre_load'
+require 'j_formalize/interactors/objectify'
+require 'j_formalize/interactors/formalize'
+require 'j_formalize'
+
+require_relative '../../../../blinky/constants'
+require_relative '../../../../blinky/utils'
+
+require_relative '../../../../blinky/pre_flight/interactors/valid_readable_files'
+
 describe Blinky::PreFlight::Interactors::ValidReadableFiles do
   def raises_interactor_failure(method, env_var, env_value, suffix)
     ENV[env_var] = env_value
     expect {subject.send(method, env_var, env_value)}.to raise_error(Interactor::Failure)
     expect(subject.context.success?).to be false
-    expect(subject.context.error).to eq "Error: #{env_var} environment variable #{env_value} #{suffix}"
+    expect(subject.context.message).to eq "#{env_var} #{env_value} #{suffix}"
   end
 
   def no_interactor_failure(env_var, env_value)
     ENV[env_var] = env_value
     expect {subject.send(:validate_env_var, env_var)}.to_not raise_error(Interactor::Failure)
-    expect(subject.context.error).to be nil
     expect(subject.context.success?).to be true
+    expect(subject.context.message).to be nil
   end
 
   let(:not_an_existing_file) {'spec/support/not_an_existing_file'}
@@ -68,8 +76,6 @@ describe Blinky::PreFlight::Interactors::ValidReadableFiles do
 
   describe '#call' do
     context 'when all files are readable then success' do
-      # Sigh. Just to get rid of those annoying twiddles for the context variables
-      # noinspection RubyResolve
       before do
         subject.context.tickets_file       = readable_file
         subject.context.users_file         = readable_file
@@ -80,8 +86,6 @@ describe Blinky::PreFlight::Interactors::ValidReadableFiles do
     end
 
     context 'when any file is not readable then ' do
-      # Sigh. Just to get rid of those annoying twiddles for the context variables
-      # noinspection RubyResolve
       before do
         File.chmod(0222, unreadable_file)
         subject.context.tickets_file       = readable_file
@@ -94,10 +98,9 @@ describe Blinky::PreFlight::Interactors::ValidReadableFiles do
 
       it 'raises error and fails' do
         expect {subject.call}.to raise_error(Interactor::Failure)
-        expect(subject.context.error).to eq 'Error: USERS environment variable spec/support/unreadable_file does not name a readable file'
         expect(subject.context.success?).to be false
+        expect(subject.context.message).to eq 'USERS spec/support/unreadable_file does not name a readable file'
       end
     end
   end
 end
-# rubocop:enable Metrics/LineLength, Layout/SpaceInsideBlockBraces

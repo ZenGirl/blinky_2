@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-require 'spec/spec_helper'
+require 'spec_helper'
 
-require 'blinky/constants'
-require 'blinky/utils'
-require 'blinky/pre_flight/interactors/valid_env_variables'
+require_relative '../../../../blinky/constants'
+require_relative '../../../../blinky/utils'
+
+require_relative '../../../../blinky/pre_flight/interactors/valid_env_variables'
 
 # We're going to disable rubocop messages as they clutter up the spec with '~' in RubyMine
 # rubocop:disable Layout/SpaceInsideBlockBraces
@@ -13,13 +14,12 @@ describe Blinky::PreFlight::Interactors::ValidEnvVariables do
     ENV[env_var] = env_value
     expect {subject.send(:validate_env_var, env_var)}.to raise_error(Interactor::Failure)
     expect(subject.context.success?).to be false
-    expect(subject.context.error).to eq "Error: #{env_var} environment variable #{suffix}"
+    expect(subject.context.message).to eq "#{env_var} #{suffix}"
   end
 
   def no_interactor_failure(env_var, env_value)
     ENV[env_var] = env_value
     expect {subject.send(:validate_env_var, env_var)}.to_not raise_error(Interactor::Failure)
-    expect(subject.context.error).to be nil
     expect(subject.context.success?).to be true
   end
 

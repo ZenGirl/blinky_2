@@ -2,10 +2,6 @@ source 'https://rubygems.org'
 
 gem 'awesome_print'
 gem 'interactor', '= 3.1.1'
-gem 'multi_json', '= 1.13.1'
-gem 'oj', '=3.7.12'
-gem 'dotenv', '=2.7.4'
-gem 'json-schema', '=2.8.1'
 
 group :test do
   gem 'rspec', '=3.8.0'
@@ -13,4 +9,4 @@ group :test do
   gem 'simplecov', '=0.16.1', require: false
 end
 
-
+gem 'JFormalize', git: 'https://github.com/ZenGirl/JFormalize.git'
