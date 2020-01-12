@@ -40,5 +40,68 @@
       "Fuentes",
       "Trevino"
     ]
+  },
+  {
+    "_id": 103,
+    "url": "http://initech.zendesk.com/api/v2/organizations/103.json",
+    "external_id": "e73240f3-8ecf-411d-ad0d-80ca8a84053d",
+    "name": "Plasmos",
+    "domain_names": [
+      "comvex.com",
+      "automon.com",
+      "verbus.com",
+      "gogol.com"
+    ],
+    "created_at": "2016-05-28T04:40:37 -10:00",
+    "details": "Non profit",
+    "shared_tickets": false,
+    "tags": [
+      "Parrish",
+      "Lindsay",
+      "Armstrong",
+      "Vaughn"
+    ]
+  },
+  {
+    "_id": 104,
+    "url": "http://initech.zendesk.com/api/v2/organizations/104.json",
+    "external_id": "f6eb60ad-fe37-4a45-9689-b32031399f93",
+    "name": "Xylar",
+    "domain_names": [
+      "anixang.com",
+      "exovent.com",
+      "photobin.com",
+      "marqet.com"
+    ],
+    "created_at": "2016-03-21T10:11:18 -11:00",
+    "details": "MegaCörp",
+    "shared_tickets": false,
+    "tags": [
+      "Hendricks",
+      "Mclaughlin",
+      "Stephens",
+      "Garner"
+    ]
+  },
+  {
+    "_id": 105,
+    "url": "http://initech.zendesk.com/api/v2/organizations/105.json",
+    "external_id": "52f12203-6112-4fb9-aadc-70a6c816d605",
+    "name": "Koffee",
+    "domain_names": [
+      "farmage.com",
+      "extrawear.com",
+      "bulljuice.com",
+      "enaut.com"
+    ],
+    "created_at": "2016-06-06T02:50:27 -10:00",
+    "details": "MegaCorp",
+    "shared_tickets": false,
+    "tags": [
+      "Jordan",
+      "Roy",
+      "Mckinney",
+      "Frost"
+    ]
   }
 ]

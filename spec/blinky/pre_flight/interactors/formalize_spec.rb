@@ -101,7 +101,7 @@ describe Blinky::PreFlight::Interactors::Formalize do
         let(:formalized_objects) { subject.context.data[:tickets][:formalized_objects] }
         it { expect(data).to_not be nil }
         it { expect(formalized_objects.is_a?(Array)).to be true }
-        it { expect(formalized_objects.size).to eq 2 }
+        it { expect(formalized_objects.size).to eq 5 }
         it { expect(formalized_objects[0][:_id]).to eq '436bf9b0-1147-4c0a-8439-6f79833bff5b' }
         it { expect(formalized_objects[1][:_id]).to eq '1a227508-9f39-427c-8f57-1b72f3fab87c' }
       end
@@ -110,7 +110,7 @@ describe Blinky::PreFlight::Interactors::Formalize do
         let(:formalized_objects) { subject.context.data[:users][:formalized_objects] }
         it { expect(data).to_not be nil }
         it { expect(formalized_objects.is_a?(Array)).to be true }
-        it { expect(formalized_objects.size).to eq 2 }
+        it { expect(formalized_objects.size).to eq 5 }
         it { expect(formalized_objects[0][:_id]).to eq 1 }
         it { expect(formalized_objects[1][:_id]).to eq 2 }
       end
@@ -119,7 +119,7 @@ describe Blinky::PreFlight::Interactors::Formalize do
         let(:formalized_objects) { subject.context.data[:organizations][:formalized_objects] }
         it { expect(data).to_not be nil }
         it { expect(formalized_objects.is_a?(Array)).to be true }
-        it { expect(formalized_objects.size).to eq 2 }
+        it { expect(formalized_objects.size).to eq 5 }
         it { expect(formalized_objects[0][:_id]).to eq 101 }
         it { expect(formalized_objects[1][:_id]).to eq 102 }
       end
