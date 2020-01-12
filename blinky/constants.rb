@@ -47,6 +47,7 @@ module Blinky
         last_login_at:   { type: :datetime },
         email:           { type: :email },
         phone:           { type: :regex, match: /\d\d\d\d-\d\d\d-\d\d\d/ },
+        signature:       { type: :string },
         organization_id: { type: :integer },
         tags:            { type: :array, subtype: :string },
         suspended:       { type: :boolean },
