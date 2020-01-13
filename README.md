@@ -9,47 +9,71 @@ The gemset is named `blinky_2` as this is a 2nd shot at doing the challenge.
 
 The project name comes from the Blinky Bill comics.
 
+**NOTE:** This project uses the `JFormalize` gem which is one I created based on previous requirements.
+[See here for details] (https://github.com/ZenGirl/JFormalize) 
+
+The `JFormalize` gem handles all the grunt work of opening, reading and parsing of a JSON file.
+The last act of the gem is to **formalize** the raw hash objects against a provided schema.
+This avoids the grunt work of validating keys and values.
+
+I have used a simple `InMemory` adapter to provide a repository pattern.
+The repository pattern used is as follows:
+
+A repo:
+
+```ruby
+module Blinky
+  module Persistence
+    class SomeRepo
+      extend AdapterDelegation
+    end
+  end
+end
+```
+
+The `AdapterDelegation` inserts some standard calls to a data set and allows assigning an adapter.
+An adapter then implements those standard calls.
+Only an `InMemory` adapter is used, but adapters for `Sqlite`, `MySql` or `MSSQL` could easily be created.
+
+No relationships are handled at present.
+That is, no `has_many` relations are provided.
+(Exercise for the reader?) 
+
+> Strictly speaking, the repository classes should be gemified, but that can come later.
+
+## Installation
+
+Use:
+
+```bash
+bundle install
+```
+
+## Testing
+
+    clear; bundle exec rspec; bundle exec rubocop
+
+I used `rspec`, `rubocop` and `simple_cov` for testing and coverage.
+I could have used `minitest`, but it seems more fitting to use common testing.
+
+The `JFormalize` gem uses `minitest` as it is important to have no external dependencies in it.
+
+Once the tests have been run, the code coverage can be viewed [here](./coverage/index.html).
+
+> Obviously this won't show up in github.
+
 ## Usage
-
-Download gems:
-
-`cd [to folder]; bundle install`
 
 To run the app:
 
-`clear;export BLINKY_DATA_HOME='./data'; ruby blinky.rb`
+`clear;export BLINKY_DATA_HOME='./blinky/data'; ruby blinky.rb`
 
 This validates the environment, loads the data, displays 
 some statistics and provides an input prompt.
 
 The data includes tickets, organizations and users. 
 
-Valid input prompts are:
-
-`[group] [field_name] [criteria]`
-
-Examples:
-
-You can quit by entering "quit" at the prompt.
-
-There are 3 "groups": users, organizations and tickets.
-
-Groups can be searched by entering a phrases like:
-
--  users _id 5
--  users name Rose Newton
--  tickets priority high
--  tickets _id 436bf9b0-1147-4c0a-8439-6f79833bff5b
--  organizations name nutralab
-
-There are several "status" commands shown below. 
-
-Status examples:
-
-| command | meaning |
-| ------- | ------- |
-| help      | Display the help message |
-| stats     | Show current groups and row totals |
+> Mor info to be added here soon!
 
 ## Processing
 
@@ -61,114 +85,8 @@ Interactors hold a *context* which allows information about the process to be ch
 The main process configures the required files, and uses an Organizer to chain 3 interactors.
 These are `EnvLoad`, `JsonValidator`, `Loader` and `Actor`.
 
+## Git
 
-## Notes
-
-### git and bash
-
-I like to see which branch I'm working on, so I these lines to my `.bashrc`:
-
-```
-# -----------------------------------------------------------------------------
-# Colorization
-# -----------------------------------------------------------------------------
-export CLICOLOR=1
-export LSCOLORS=GxFxCxDxBxegedabagaced
-
-# Regular
-txtblk='\e[0;30m' # Black
-txtred='\e[0;31m' # Red
-txtgrn='\e[0;32m' # Green
-txtylw='\e[0;33m' # Yellow
-txtblu='\e[0;34m' # Blue
-txtpur='\e[0;35m' # Purple
-txtcyn='\e[0;36m' # Cyan
-txtwht='\e[0;37m' # White
-
-# Bold
-bldblk='\e[1;30m' # Black
-bldred='\e[1;31m' # Red
-bldgrn='\e[1;32m' # Green
-bldylw='\e[1;33m' # Yellow
-bldblu='\e[1;34m' # Blue
-bldpur='\e[1;35m' # Purple
-bldcyn='\e[1;36m' # Cyan
-bldwht='\e[1;37m' # White
-
-# Underline
-unkblk='\e[4;30m' # Black
-undred='\e[4;31m' # Red
-undgrn='\e[4;32m' # Green
-undylw='\e[4;33m' # Yellow
-undblu='\e[4;34m' # Blue
-undpur='\e[4;35m' # Purple
-undcyn='\e[4;36m' # Cyan
-undwht='\e[4;37m' # White
-
-# Background
-bakblk='\e[40m'   # Black
-bakred='\e[41m'   # Red
-bakgrn='\e[42m'   # Green
-bakylw='\e[43m'   # Yellow
-bakblu='\e[44m'   # Blue
-bakpur='\e[45m'   # Purple
-bakcyn='\e[46m'   # Cyan
-bakwht='\e[47m'   # White
-txtrst='\e[0m'    # Text Reset
-
-find_git_branch() {
-  # Based on: http://stackoverflow.com/a/13003854/170413
-  local branch
-  if branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null); then
-    if [[ "$branch" == "HEAD" ]]; then
-      branch='detached*'
-    fi
-    git_branch="($branch)"
-  else
-    git_branch=""
-  fi
-}
-
-find_git_dirty() {
-  local status=$(git status --porcelain 2> /dev/null)
-  if [[ "$status" != "" ]]; then
-    git_dirty='*'
-  else
-    git_dirty=''
-  fi
-}
-
-PROMPT_COMMAND="find_git_branch; find_git_dirty; $PROMPT_COMMAND"
-
-export PS1="\[$bldgrn\]\u@\h\[$txtrst\] \w \[$bldylw\]\$git_branch\[$txtcyn\]\$git_dirty\[$txtrst\]\$ "
-export SUDO_PS1="\[$bakred\]\u@\h\[$txtrst\] \w\$ "
-```
-
-My workflow is like this:
-
-Start from `master`
-
-`git branch -b develop` to create the develop branch. All features are branched off this. Once a branch is complete, checkout `develop` and merge the feature.
-If all is well, and after some features, switch to `master` and merge, commit and push `develop`.
-
-For example:
-
-```
-[master] git branch -b develop
-[develop] git push --set-upstream origin develop
-[develop] git branch -b features/some_meaningful_branch_name
-[features/some_meaningful_branch_name] git push --set-upstream develop features/some_meaningful_branch_name
-Add and update files...
-Test to make sure nothing has broken...
-[branch name] git commit -a -m 'Some meaningful words'
-[branch name] git push
-[branch name] git checkout develop
-[develop] git merge features/some_meaningful_branch_name
-Test to make sure nothing has broken...
-After multiple of the above...
-[develop] git checkout master
-[master] git merge develop
-[master] git commit -a -m 'Some summary of features'
-[master] git push
-```
+[Full details](./GitFlow.md)
+[Bash details](./GitBash.md)
 
