@@ -1,20 +1,9 @@
-# frozen_string_literal: true
-
 require 'spec_helper'
 
-require 'interactor'
+require 'constants'
+require 'utils'
 
-#require 'j_formalize/constants'
-#require 'j_formalize/interactors/common_context'
-#require 'j_formalize/interactors/pre_load'
-#require 'j_formalize/interactors/objectify'
-#require 'j_formalize/interactors/formalize'
-#require 'j_formalize'
-
-require_relative '../../../../blinky/constants'
-require_relative '../../../../blinky/utils'
-
-require_relative '../../../../blinky/pre_flight/interactors/valid_readable_files'
+require 'pre_flight/interactors/valid_readable_files'
 
 describe Blinky::PreFlight::Interactors::ValidReadableFiles do
   def raises_interactor_failure(method, env_var, env_value, suffix)

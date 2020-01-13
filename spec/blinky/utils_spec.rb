@@ -1,9 +1,7 @@
-# frozen_string_literal: true
-
 require 'spec_helper'
 
-require_relative '../../blinky/constants'
-require_relative '../../blinky/utils'
+require 'constants'
+require 'utils'
 
 class TestingUtils
   include Blinky::Utils

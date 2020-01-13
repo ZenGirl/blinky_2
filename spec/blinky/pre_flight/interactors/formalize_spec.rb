@@ -1,16 +1,9 @@
-# rubocop:disable Style/FrozenStringLiteralComment
-# Disabled, because we have to fiddle with strings that *may* be frozen
-
 require 'spec_helper'
 
-require 'interactor'
+require 'constants'
+require 'utils'
 
-require 'j_formalize'
-
-require_relative '../../../../blinky/constants'
-require_relative '../../../../blinky/utils'
-
-require_relative '../../../../blinky/pre_flight/interactors/formalize'
+require 'pre_flight/interactors/formalize'
 
 describe Blinky::PreFlight::Interactors::Formalize do
   describe 'private methods' do

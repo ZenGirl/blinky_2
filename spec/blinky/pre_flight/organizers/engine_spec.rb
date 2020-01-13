@@ -1,15 +1,13 @@
-# frozen_string_literal: true
-
 require 'spec_helper'
 
-require_relative '../../../../blinky/constants'
-require_relative '../../../../blinky/utils'
+require 'constants'
+require 'utils'
 
-require_relative '../../../../blinky/pre_flight/interactors/valid_env_variables'
-require_relative '../../../../blinky/pre_flight/interactors/valid_readable_files'
-require_relative '../../../../blinky/pre_flight/interactors/formalize'
+require 'pre_flight/interactors/valid_env_variables'
+require 'pre_flight/interactors/valid_readable_files'
+require 'pre_flight/interactors/formalize'
 
-require_relative '../../../../blinky/pre_flight/organizers/engine'
+require 'pre_flight/organizers/engine'
 
 describe Blinky::PreFlight::Organizers::Engine do
   let(:unreadable_file) { 'spec/support/unreadable_file' }

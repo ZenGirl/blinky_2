@@ -1,8 +1,6 @@
-# frozen_string_literal: true
-
 require 'spec_helper'
 
-require_relative '../../blinky/constants'
+require 'constants'
 
 describe Blinky::Constants do
   describe 'ENV_VAR_NAMES' do

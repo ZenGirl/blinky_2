@@ -1,12 +1,11 @@
 require 'spec_helper'
 
-require_relative '../../../blinky/persistence/repo'
-require_relative '../../../blinky/persistence/repo_delegation'
+require_relative '../../../blinky/persistence/adapter_delegation'
 
-describe Blinky::Persistence::RepoDelegation do
+describe Blinky::Persistence::AdapterDelegation do
   it 'delegates from class to subject' do
     class OneRepo
-      extend Blinky::Persistence::RepoDelegation
+      extend Blinky::Persistence::AdapterDelegation
     end
     singleton_methods = OneRepo.singleton_methods
     expect(singleton_methods.include?(:save)).to be true

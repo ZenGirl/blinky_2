@@ -1,11 +1,9 @@
-# frozen_string_literal: true
-
 require 'spec_helper'
 
-require_relative '../../../../blinky/constants'
-require_relative '../../../../blinky/utils'
+require 'constants'
+require 'utils'
 
-require_relative '../../../../blinky/pre_flight/interactors/valid_env_variables'
+require 'pre_flight/interactors/valid_env_variables'
 
 describe Blinky::PreFlight::Interactors::ValidEnvVariables do
   def raises_interactor_failure(env_var, env_value, suffix)

@@ -1,8 +1,7 @@
 require 'spec_helper'
 
 require_relative '../../../blinky/persistence/adapters/in_memory'
-require_relative '../../../blinky/persistence/repo'
-require_relative '../../../blinky/persistence/repo_delegation'
+require_relative '../../../blinky/persistence/adapter_delegation'
 require_relative '../../../blinky/persistence/users_repo'
 
 describe Blinky::Persistence::UsersRepo do

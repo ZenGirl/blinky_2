@@ -4,7 +4,7 @@ module Blinky
   module Persistence
     # Single access point for organizations
     class OrganizationsRepo
-      extend RepoDelegation
+      extend AdapterDelegation
     end
   end
 end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-require_relative '../../../../blinky/persistence/adapters/in_memory'
+require 'persistence/adapters/in_memory'
 
 describe Blinky::Persistence::Adapters::InMemory do
   let(:adapter) { Blinky::Persistence::Adapters::InMemory.new }

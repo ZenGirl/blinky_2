@@ -9,8 +9,9 @@ end
 require 'rspec'
 require 'interactor'
 require 'awesome_print'
+require 'j_formalize'
 
-$LOAD_PATH << File.expand_path('.')
+$LOAD_PATH << "#{File.expand_path('.')}/blinky"
 
 RSpec::Expectations.configuration.on_potential_false_positives = :nothing
 # RSpec.configure do |config|

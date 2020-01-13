@@ -3,37 +3,37 @@
 module Blinky
   module Persistence
     # A module with commands to be implemented by specific repo
-    module RepoDelegation
+    module AdapterDelegation
       def adapter
-        Repo.adapter
+        @adapter
       end
 
       def adapter=(adapter)
-        Repo.adapter = adapter
+        @adapter = adapter
       end
 
       def save(id, row)
-        Repo.save(id, row)
+        @adapter.save(id, row)
       end
 
       def all
-        Repo.all
+        @adapter.all
       end
 
       def find_by_id(id)
-        Repo.find_by_id(id)
+        @adapter.find_by_id(id)
       end
 
       def query(criteria)
-        Repo.query(criteria)
+        @adapter.query(criteria)
       end
 
       def create(id, object)
-        Repo.create(id, object)
+        @adapter.create(id, object)
       end
 
       def clear
-        Repo.clear
+        @adapter.clear
       end
     end
   end
