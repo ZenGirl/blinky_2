@@ -9,6 +9,8 @@ The gemset is named `blinky_2` as this is a 2nd shot at doing the challenge.
 
 The project name comes from the Blinky Bill comics.
 
+**NOTE:** Slight mistake: The code folder should be `lib` not `blinky`. My bad. Will be fixed. Only just noticed.
+
 **NOTE:** This project uses the `JFormalize` gem which is one I created based on previous requirements.
 [See here for details] (https://github.com/ZenGirl/JFormalize) 
 
