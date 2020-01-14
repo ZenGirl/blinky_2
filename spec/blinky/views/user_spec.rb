@@ -60,7 +60,7 @@ organization_id: 110
 )
     expect(rendered).to eq(expected)
   end
-  it 'renders without references' do
+  it 'renders with references' do
     view                          = Blinky::Views::User.new
     @objects[0][:submitter_id]    = 1
     @objects[0][:assignee_id]     = 2
@@ -87,6 +87,7 @@ organization_id: 110
       suspended: true
            role: admin
    Organization: Jacks Corp
+        Tickets:
 )
     expect(rendered).to eq(expected)
   end

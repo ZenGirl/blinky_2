@@ -40,8 +40,8 @@ organization_id: <%= @obj[:organization_id] %>
         if show_references
           result += add_reference(@organizations_repo, @organizations_partial, obj, :organization_id, 'Organization')
           result += "        Tickets:\n"
-          add_assigned_tickets(obj)
-          add_submitted_tickets(obj)
+          result += add_assigned_tickets(obj)
+          result += add_submitted_tickets(obj)
         end
         result
       end
