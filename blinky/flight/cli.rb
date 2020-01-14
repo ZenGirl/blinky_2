@@ -20,6 +20,8 @@ module Blinky
           Blinky::Flight::Search.run
         elsif cmd == '2'
           Blinky::Flight::Fields.run
+        elsif cmd == 'help'
+        # Nothing to do - falls out to help
         else
           puts "The command [#{cmd}] is unknown"
         end
