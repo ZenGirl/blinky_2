@@ -2,12 +2,17 @@
 
 $LOAD_PATH << File.expand_path('../blinky', __dir__)
 
+require 'erb'
+require 'json'
+require 'time'
+
 require 'interactor'
 require 'j_formalize'
 
 require 'constants'
 require 'utils'
 
+require 'persistence/adapters/in_memory'
 require 'persistence/adapter_delegation'
 require 'persistence/users_repo'
 require 'persistence/tickets_repo'
@@ -21,7 +26,6 @@ require 'pre_flight/organizers/engine'
 
 require 'views/master_view'
 
-require 'erb'
 require 'views/ticket'
 require 'views/ticket_partial'
 require 'views/user'
@@ -34,111 +38,9 @@ trap('SIGINT') do
   exit 0
 end
 
-module Blinky
-  class CLI
-    def initialize
-      @red_on    = "\033[0;31m"
-      @blue_on   = "\033[0;34m"
-      @yellow_on = "\033[0;33m"
-      @color_off = "\033[0m"
-    end
+require 'flight/colors'
+require 'flight/search'
+require 'flight/fields'
+require 'flight/cli'
 
-    def run
-      puts banner
-      @data = Blinky::PreFlight::Organizers::Engine.call
-      unless @data.success?
-        puts 'Errors occurred during load:'
-        puts @data.message
-        puts "\nBye"
-        exit 1
-      end
-      puts "Success: #{@data.success?}"
-      puts help
-      print prompt
-      while (phrase = gets.chomp)
-        cmd = phrase.squeeze(' ').downcase.split(' ')[0]
-        break if cmd == 'quit'
-        if cmd == '1'
-          run_search
-        elsif cmd == '2'
-          show_fields
-        elsif cmd == 'help'
-          puts help
-        else
-          unknown_command(cmd)
-        end
-        print prompt
-      end
-      puts "\nBye"
-    end
-
-    private
-
-    def run_search
-      search_prompt
-      while (phrase = gets.chomp)
-        cmd = phrase.squeeze(' ').downcase.split(' ')[0]
-        target = if cmd == '1'
-                   :users
-                 elsif cmd == '2'
-                   :tickets
-                 elsif cmd == '3'
-                   :organizations
-                 else
-                   puts 'Wut?'
-                 end
-        puts @data
-        search_prompt
-      end
-    end
-
-    def show_fields
-      show_group_fields('Users', :users)
-      show_group_fields('Tickets', :tickets)
-      show_group_fields('Organizations', :organizations)
-    end
-
-    def show_group_fields(name, group_key)
-      puts '-' * 72
-      puts "Search #{name} with:"
-      puts Blinky::Constants::SCHEMAS[group_key].keys.collect { |key| "     #{key}" }
-    end
-
-    def unknown_command(cmd)
-      puts "The command [#{cmd}] is unknown"
-      puts help
-    end
-
-    def banner
-      <<EOF
-Welcome to Blinky search! 
-A simple CLI for search for a coding challenge.
-EOF
-    end
-
-    def help
-      <<EOF
-
-Type #{@red_on}quit [enter]#{@color_off} to exit at any time.
-Type #{@red_on}help [enter]#{@color_off} to view this message.
-
-        Select search options:
-        * Type 1 to search
-        * Type 2 to view a list of searchable fields
-
-EOF
-    end
-
-    def prompt
-      "#{@blue_on} > #{@color_off}"
-    end
-
-    def search_prompt
-      puts 'Select 1) Users or 2) Tickets or 3) Organizations.'
-      puts "#{@yellow_on} > #{@color_off}"
-    end
-
-  end
-end
-
-Blinky::CLI.new.run
+Blinky::CLI.run

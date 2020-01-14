@@ -21,7 +21,9 @@ module Blinky
 
         def find_by_id(id)
           @map.fetch(id)
-        rescue KeyError
+        rescue KeyError => e
+          puts 'KeyError!'
+          puts e
           nil
         end
 

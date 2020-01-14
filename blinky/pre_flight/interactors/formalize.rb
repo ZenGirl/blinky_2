@@ -20,7 +20,7 @@ module Blinky
         def formalize_context(key, file_name)
           {
             json_string: load_file(key, file_name),
-            max_size:    nil,
+            max_size:    200_000,
             schema:      Blinky::Constants::SCHEMAS[key]
           }
         end
