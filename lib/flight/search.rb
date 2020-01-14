@@ -12,7 +12,7 @@ module Blinky
         '3' => { key: :organizations, repo: Blinky::Persistence::OrganizationsRepo, view: Blinky::Views::Organization }
       }.freeze
 
-      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       def self.run
         set_colors
         search_prompt
@@ -21,11 +21,12 @@ module Blinky
           cmd = phrase.squeeze(' ').downcase.split(' ')[0]
           break if cmd == '4'
 
-          unless %w(1 2 3).include?(cmd)
+          unless %w[1 2 3].include?(cmd)
             puts "#{@yellow_on}The command [#{cmd}] is unknown#{@color_off}"
             search_prompt
             next
           end
+
           # Target specific repo
           target       = TARGET_DATA[cmd]
           dataset      = target[:key].to_s.capitalize
@@ -48,11 +49,11 @@ module Blinky
         end
       end
 
-      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
       class << self
         def get_field(dataset, valid_fields)
-          field_names = valid_fields.keys.collect { |k| k.to_s}
+          field_names = valid_fields.keys.collect(&:to_s)
           puts "#{@purple_on}Enter search field for #{dataset} (? shows fields)#{@color_off}"
           print "#{@purple_on} > #{@color_off}"
           while (phrase = gets.chomp)
@@ -78,11 +79,11 @@ module Blinky
           value = gets.chomp.squeeze(' ').strip
           puts "#{@purple_on}Searching #{dataset} for #{field} with a value of '#{value}'#{@color_off}"
           field_type = valid_fields[field.to_sym][:type]
-          if [:guid, :url, :datetime, :string, :regex, :array].include? field_type
+          if %I[guid url datetime string regex array].include? field_type
             value.to_s
-          elsif [:integer].include? field_type
+          elsif field_type == :integer
             value.to_i
-          elsif [:boolean].include? field_type
+          elsif field_type == :boolean
             value.to_s == 'true'
           else
             puts "Unknown field_type: [#{field_type}]"
@@ -101,7 +102,7 @@ module Blinky
             field.to_sym => coerced_value
           }
           results  = target[:repo].query(criteria)
-          if results && results.size.positive?
+          if results&.size.positive?
             results.each do |result|
               puts target[:view].new.render(result, true)
             end

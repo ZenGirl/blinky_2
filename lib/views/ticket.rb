@@ -35,7 +35,6 @@ organization_id: <%= @obj[:organization_id] %>
         @header = header || 'Ticket'
         result  = ERB.new(TEMPLATE).result(binding)
         if show_references
-          #TODO: This needs refactoring
           result += add_reference(@users_repo, @users_partial, obj, :submitter_id, 'Submitter')
           result += add_reference(@users_repo, @users_partial, obj, :assignee_id, 'Assignee')
           result += add_reference(@organizations_repo, @organizations_partial, obj, :organization_id, 'Organization')

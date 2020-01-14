@@ -87,7 +87,6 @@ organization_id: 110
       suspended: true
            role: admin
    Organization: Jacks Corp
-        Tickets:
 )
     expect(rendered).to eq(expected)
   end

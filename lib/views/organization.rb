@@ -28,13 +28,11 @@ module Blinky
         @header = header || 'Organization'
         result  = ERB.new(TEMPLATE).result(binding)
         if show_references
-          #TODO: This needs refactoring!
-          users = @users_repo.query({ mode: :equal, organization_id: obj[:_id] })
-          users.each do |user|
+          common_query = { mode: :equal, organization_id: obj[:_id] }
+          @users_repo.query(common_query).each do |user|
             result += add_reference(@users_repo, @users_partial, user, :_id, 'User')
           end
-          tickets = @tickets_repo.query({ mode: :equal, organization_id: obj[:_id] })
-          tickets.each do |ticket|
+          @tickets_repo.query(common_query).each do |ticket|
             result += add_reference(@tickets_repo, @tickets_partial, ticket, :_id, 'Ticket')
           end
         end

@@ -5,34 +5,34 @@ module Blinky
   class CLI
     extend Blinky::Flight::Colors
 
-    # rubocop:disable Metrics/AbcSize
     def self.run
       set_colors
       banner
       load_and_check
-      help
-      prompt
-      while (phrase = gets.chomp)
-        cmd = phrase.squeeze(' ').downcase.split(' ')[0]
-        break if cmd == 'quit'
-
-        if cmd == '1'
-          Blinky::Flight::Search.run
-        elsif cmd == '2'
-          Blinky::Flight::Fields.run
-        elsif cmd == 'help'
-        # Nothing to do - falls out to help
-        else
-          puts "The command [#{cmd}] is unknown"
-        end
-        help
-        prompt
-      end
+      run_loop
       puts "\nBye"
     end
-    # rubocop:enable Metrics/AbcSize
 
     class << self
+      def run_loop
+        help_and_prompt
+        while (phrase = gets.chomp)
+          cmd = phrase.squeeze(' ').downcase.split(' ')[0]
+          break if cmd == 'quit'
+
+          if cmd == '1'
+            Blinky::Flight::Search.run
+          elsif cmd == '2'
+            Blinky::Flight::Fields.run
+          elsif cmd == 'help'
+            # Nothing to do - falls out to help
+          else
+            puts "The command [#{cmd}] is unknown"
+          end
+          help_and_prompt
+        end
+      end
+
       def load_and_check
         result = Blinky::PreFlight::Organizers::Engine.call
         return if result.success?
@@ -49,7 +49,7 @@ module Blinky
         puts 'A simple CLI for search for a coding challenge.'
       end
 
-      def help
+      def help_and_prompt
         puts ''
         puts "Type #{@red_on}quit [enter]#{@color_off} to exit at any time."
         puts "Type #{@red_on}help [enter]#{@color_off} to view this message."
@@ -58,9 +58,6 @@ module Blinky
         puts "        * Type #{@red_on}1 [enter]#{@color_off} to search datasets (Users, Tickets or Organizations)"
         puts "        * Type #{@red_on}2 [enter]#{@color_off} to view a list of searchable fields"
         puts ''
-      end
-
-      def prompt
         print "#{@blue_on} > #{@color_off}"
       end
     end
