@@ -6,7 +6,7 @@ module Blinky
     class TicketPartial
       include ERB::Util
 
-      TEMPLATE = %(<%= sprintf("%15s", @header) %>: <%= @obj[:subject] %>)
+      TEMPLATE = %(<%= sprintf("%15s", @header) %>: [<%= obj[:status]%>] <%= @obj[:subject] %>)
 
       def render(obj, header = nil)
         @obj    = obj

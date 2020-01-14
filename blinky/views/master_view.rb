@@ -9,17 +9,19 @@ module Blinky
         @users_view    = Blinky::Views::User
         @users_partial = Blinky::Views::UserPartial
 
-        @organizations_repo     = Blinky::Persistence::OrganizationsRepo
-        @organizations_view     = Blinky::Views::Organization
-        @organizations_partial  = Blinky::Views::OrganizationPartial
+        @organizations_repo    = Blinky::Persistence::OrganizationsRepo
+        @organizations_view    = Blinky::Views::Organization
+        @organizations_partial = Blinky::Views::OrganizationPartial
 
-        @tickets_repo     = Blinky::Persistence::TicketsRepo
-        @tickets_view     = Blinky::Views::Ticket
-        @tickets_partial  = Blinky::Views::TicketPartial
+        @tickets_repo    = Blinky::Persistence::TicketsRepo
+        @tickets_view    = Blinky::Views::Ticket
+        @tickets_partial = Blinky::Views::TicketPartial
       end
 
       def add_reference(repo, view, obj, key, heading)
         ref = repo.find_by_id(obj[key])
+        return '' if ref.nil?
+
         view.new.render(ref, heading) + "\n"
       end
     end

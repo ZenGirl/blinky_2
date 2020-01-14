@@ -1,6 +1,6 @@
-#!/usr/bin/ruby
+# frozen_string_literal: true
 
-$LOAD_PATH << File.expand_path('../blinky', __dir__)
+$LOAD_PATH << File.expand_path('blinky', __dir__)
 
 require 'erb'
 require 'json'

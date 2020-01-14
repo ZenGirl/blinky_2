@@ -48,13 +48,20 @@ module Blinky
         private
 
         def query_equal(key, val)
-          @map.values.select { |obj| obj[key] == val }
+          @map.values.select do |obj|
+            if obj[key].is_a?(Array)
+              arr_str = obj[key].join(' ').downcase
+              arr_str.index(val.downcase)
+            else
+              obj[key].to_s.downcase == val.to_s.downcase
+            end
+          end
         end
 
         def query_like(key, val)
           @map.select do |_, v|
-            v[key].match(/.{0,100}#{val}.{0,100}/i)
-          end
+            v[key].match(/#{val.gsub('*', '.*')}/i)
+          end.values
         end
       end
     end

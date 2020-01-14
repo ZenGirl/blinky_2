@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 module Blinky
   module Flight
+    # Shows fields for each repo
     class Fields
       extend Colors
 
@@ -9,12 +12,12 @@ module Blinky
         show_group_fields('Organizations', :organizations)
       end
 
-      private
-
-      def self.show_group_fields(name, group_key)
-        puts '-' * 72
-        puts "Search #{name} with:"
-        puts Blinky::Constants::SCHEMAS[group_key].keys.collect { |key| "     #{key}" }
+      class << self
+        def show_group_fields(name, group_key)
+          puts '-' * 72
+          puts "Search #{name} with:"
+          puts Blinky::Constants::SCHEMAS[group_key].keys.collect { |key| "     #{key}" }
+        end
       end
     end
   end

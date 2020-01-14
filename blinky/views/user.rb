@@ -39,9 +39,35 @@ organization_id: <%= @obj[:organization_id] %>
         result  = ERB.new(TEMPLATE).result(binding)
         if show_references
           result += add_reference(@organizations_repo, @organizations_partial, obj, :organization_id, 'Organization')
+          result += "        Tickets:\n"
+          add_assigned_tickets(obj)
+          add_submitted_tickets(obj)
         end
         result
       end
+
+      # rubocop:disable Style/BracesAroundHashParameters
+      def add_assigned_tickets(obj)
+        result  = ''
+        tickets = @tickets_repo.query({ mode: :equal, assignee_id: obj[:_id] })
+        tickets.each do |ticket|
+          result += add_reference(@tickets_repo, @tickets_partial, ticket, :_id, 'Assigned')
+        end
+        result
+      end
+
+      # rubocop:enable Style/BracesAroundHashParameters
+
+      # rubocop:disable Style/BracesAroundHashParameters
+      def add_submitted_tickets(obj)
+        result  = ''
+        tickets = @tickets_repo.query({ mode: :equal, submitter_id: obj[:_id] })
+        tickets.each do |ticket|
+          result += add_reference(@tickets_repo, @tickets_partial, ticket, :_id, 'Submitted')
+        end
+        result
+      end
+      # rubocop:enable Style/BracesAroundHashParameters
     end
   end
 end

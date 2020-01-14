@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 module Blinky
   module Flight
+    # Simply provides some coloration options for output
     module Colors
       def set_colors
         @red_on    = "\033[0;31m"
