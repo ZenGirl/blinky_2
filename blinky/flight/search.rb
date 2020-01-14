@@ -31,8 +31,11 @@ module Blinky
           dataset      = target[:key].to_s.capitalize
           valid_fields = Blinky::Constants::SCHEMAS[target[:key]]
           # Get field
-          field = get_field(valid_fields)
-          next if field.nil?
+          field = get_field(dataset, valid_fields)
+          if field.nil?
+            search_prompt
+            next
+          end
 
           # Get criteria
           coerced_value = get_criteria(field, dataset, valid_fields)
@@ -48,15 +51,22 @@ module Blinky
       # rubocop:enable Metrics/AbcSize
 
       class << self
-        def get_field(valid_fields)
-          puts "#{@purple_on}Enter search field#{@color_off}"
+        def get_field(dataset, valid_fields)
+          field_names = valid_fields.keys.collect { |k| k.to_s}
+          puts "#{@purple_on}Enter search field for #{dataset} (? shows fields)#{@color_off}"
           print "#{@purple_on} > #{@color_off}"
-          phrase = gets.chomp
-          field  = phrase.squeeze(' ').downcase.split(' ')[0]
-          unless valid_fields.keys.include?(field.to_sym)
-            puts "#{@purple_on}The field [#{field}] is unknown#{@color_off}"
-            search_prompt
-            return nil
+          while (phrase = gets.chomp)
+            field = phrase.squeeze(' ').downcase.split(' ')[0]
+            if field == '?'
+              puts "#{@purple_on}#{field_names}#{@color_off}"
+              print "#{@purple_on} > #{@color_off}"
+              next
+            end
+            unless field_names.include?(field)
+              puts "#{@purple_on}The field [#{field}] is unknown#{@color_off}"
+              return nil
+            end
+            break
           end
           field
         end
@@ -79,6 +89,7 @@ module Blinky
             nil
           end
         end
+
         # rubocop:enable Metrics/AbcSize
 
         # rubocop:disable Layout/ExtraSpacing, Layout/SpaceAroundOperators
@@ -98,6 +109,7 @@ module Blinky
             puts 'No results found'
           end
         end
+
         # rubocop:enable Layout/ExtraSpacing, Layout/SpaceAroundOperators
 
         def search_prompt

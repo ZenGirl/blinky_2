@@ -68,6 +68,10 @@ Once the tests have been run, the code coverage can be viewed [here](./coverage/
 
 To run the app:
 
+`./run.sh`
+
+Or:
+
 `clear; TICKETS=./data/tickets.json USERS=./data/users.json ORGANIZATIONS=./data/organizations.json bundle exec ruby blinky.rb`
 
 This validates the environment, loads the data and provides an input prompt.
@@ -103,7 +107,7 @@ Type quit [enter] to exit at any time.
 Type help [enter] to view this message.
 
         Select search options:
-        * Type 1 to search
+        * Type 1 to search datasets (Users, Tickets or Organizations)
         * Type 2 to view a list of searchable fields
 
  >

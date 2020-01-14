@@ -53,6 +53,7 @@ describe Blinky::Views::Organization do
         details: MegaCorp
  shared_tickets: false
            tags: ["Fulton", "West", "Rodriguez", "Farley"]
+           User: Loraine Pittman
 )
     expect(rendered).to eq(expected)
   end

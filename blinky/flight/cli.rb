@@ -55,7 +55,7 @@ module Blinky
         puts "Type #{@red_on}help [enter]#{@color_off} to view this message."
         puts ''
         puts '        Select search options:'
-        puts '        * Type 1 to search'
+        puts '        * Type 1 to search datasets (Users, Tickets or Organizations)'
         puts '        * Type 2 to view a list of searchable fields'
         puts ''
       end
