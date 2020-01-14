@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-require_relative '../../../blinky/persistence/adapters/in_memory'
-require_relative '../../../blinky/persistence/adapter_delegation'
-require_relative '../../../blinky/persistence/tickets_repo'
+require_relative '../../../lib/persistence/adapters/in_memory'
+require_relative '../../../lib/persistence/adapter_delegation'
+require_relative '../../../lib/persistence/tickets_repo'
 
 describe Blinky::Persistence::TicketsRepo do
   before :all do

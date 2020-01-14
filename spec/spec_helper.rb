@@ -11,7 +11,7 @@ require 'interactor'
 require 'awesome_print'
 require 'j_formalize'
 
-$LOAD_PATH << "#{File.expand_path('.')}/blinky"
+$LOAD_PATH << "#{File.expand_path('.')}/lib"
 
 RSpec::Expectations.configuration.on_potential_false_positives = :nothing
 # RSpec.configure do |config|

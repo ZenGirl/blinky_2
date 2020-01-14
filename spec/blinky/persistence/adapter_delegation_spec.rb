@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-require_relative '../../../blinky/persistence/adapter_delegation'
+require_relative '../../../lib/persistence/adapter_delegation'
 
 describe Blinky::Persistence::AdapterDelegation do
   it 'delegates from class to subject' do

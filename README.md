@@ -1,5 +1,7 @@
 # blinky2 - A simply CLI for search
 
+## Introduction
+
 This is a simple CLI program to handle the ZenDesk code challenge.
 The original PDF is in the `docs` directory.
 
@@ -9,39 +11,17 @@ The gemset is named `blinky_2` as this is a 2nd shot at doing the challenge.
 
 The project name comes from the Blinky Bill comics.
 
-**NOTE:** Slight mistake: The code folder should be `lib` not `blinky`. My bad. Will be fixed. Only just noticed.
-
 **NOTE:** This project uses the `JFormalize` gem which is one I created based on previous requirements.
-[See here for details] (https://github.com/ZenGirl/JFormalize) 
+[See here for details] (https://github.com/ZenGirl/JFormalize)
 
-The `JFormalize` gem handles all the grunt work of opening, reading and parsing of a JSON file.
-The last act of the gem is to **formalize** the raw hash objects against a provided schema.
-This avoids the grunt work of validating keys and values.
+The aim of this process is simplicity and separation of concerns.
+As such, I used Interactors.
+These are simple ways to divide up a chain of process into discrete sections with a fail fast approach.
+Interactors hold a *context* which allows information about the process to be chained together.
 
-I have used a simple `InMemory` adapter to provide a repository pattern.
-The repository pattern used is as follows:
 
-A repo:
 
-```ruby
-module Blinky
-  module Persistence
-    class SomeRepo
-      extend AdapterDelegation
-    end
-  end
-end
-```
 
-The `AdapterDelegation` inserts some standard calls to a data set and allows assigning an adapter.
-An adapter then implements those standard calls.
-Only an `InMemory` adapter is used, but adapters for `Sqlite`, `MySql` or `MSSQL` could easily be created.
-
-No relationships are handled at present.
-That is, no `has_many` relations are provided.
-(Exercise for the reader?) 
-
-> Strictly speaking, the repository classes should be gemified, but that can come later.
 
 ## Installation
 
@@ -51,18 +31,8 @@ Use:
 bundle install
 ```
 
-## Testing
 
-    clear; bundle exec rspec; bundle exec rubocop
 
-I used `rspec`, `rubocop` and `simple_cov` for testing and coverage.
-I could have used `minitest`, but it seems more fitting to use common testing.
-
-The `JFormalize` gem uses `minitest` as it is important to have no external dependencies in it.
-
-Once the tests have been run, the code coverage can be viewed [here](./coverage/index.html).
-
-> Obviously this won't show up in github.
 
 ## Usage
 
@@ -74,7 +44,7 @@ Or:
 
 `clear; TICKETS=./data/tickets.json USERS=./data/users.json ORGANIZATIONS=./data/organizations.json bundle exec ruby blinky.rb`
 
-This validates the environment, loads the data and provides an input prompt.
+Using either method validates the environment, loads the data and provides an input prompt.
 If any errors have occurred they are shown and the process aborts.
 
 For example:
@@ -97,6 +67,12 @@ The `JFormalize` adjusts these values during its operation so the main applicati
 The requirements specify that the 'output is not prescriptive' implies that the input is 'prescriptive'.
 As such the input process follows the "Call Centre Approach" described in the specifications.
 
+> **CAVEAT:** I must confess to not being an expert at CLI UI's.
+> As such, my implementation followed the specification as close to the letter as possible.
+> (The last 40 years have been primarily coding server-side APIs, doing SysAdmin work, writing documents and mentoring/teaching)
+> There are obviously improvements that can be made, and any suggestions can be made via the GitHub repository.
+> I am happy to change or enhance input or output as required. 
+
 The first display shows a banner and input options plus a blue colorized prompt:
 
 ```
@@ -107,8 +83,8 @@ Type quit [enter] to exit at any time.
 Type help [enter] to view this message.
 
         Select search options:
-        * Type 1 to search datasets (Users, Tickets or Organizations)
-        * Type 2 to view a list of searchable fields
+        * Type 1 [enter] to search datasets (Users, Tickets or Organizations)
+        * Type 2 [enter] to view a list of searchable fields
 
  >
 ```  
@@ -134,8 +110,8 @@ Example:
 ```
 Enter search field
  > _id
-Enter search value
- > 1
+Enter search field for Organizations (? shows fields)
+ > 101
 Searching Users for _id with a value of '1'
 ```
 
@@ -148,6 +124,8 @@ Enter search field
  > goober bongo
 The field [goober] is unknown
 ```
+
+If the users enters `?`
 
 If the field is recognized, then the value is checked.
 If it contains any `*` characters, then a `like` search is initiated.
@@ -210,18 +188,55 @@ Note that referenced items are included.
 In this case (`Users`), these are the organization and tickets.
 The same is true for `Tickets` and `Organizations`. 
 
-## Processing
+## `JFormalize`
 
-The aim of this process is simplicity and separation of concerns.
-As such, I used Interactors.
-These are simple ways to divide up a chain of process into discrete sections with a fail fast approach.
-Interactors hold a *context* which allows information about the process to be chained together.
+The `JFormalize` gem handles all the grunt work of opening, reading and parsing of a JSON file.
+The last act of the gem is to **formalize** the raw hash objects against a provided schema.
+This avoids the grunt work of validating keys and values.
 
-The main process configures the required files, and uses an Organizer to chain 3 interactors.
-These are `EnvLoad`, `JsonValidator`, `Loader` and `Actor`.
+## Repository Pattern
+
+I have used a simple `InMemory` adapter to provide a repository pattern.
+The repository pattern used is as follows:
+
+A repo:
+
+```ruby
+module Blinky
+  module Persistence
+    class SomeRepo
+      extend AdapterDelegation
+    end
+  end
+end
+```
+
+The `AdapterDelegation` inserts some standard calls to a data set and allows assigning an adapter.
+An adapter then implements those standard calls.
+Only an `InMemory` adapter is used, but adapters for `Sqlite`, `MySql` or `MSSQL` could easily be created.
+
+No relationships are handled at present.
+That is, no `has_many` relations are provided.
+(Exercise for the reader?) 
+
+> Strictly speaking, the repository classes should be gemified, but that can come later.
+
+## Testing
+
+    clear; bundle exec rspec; bundle exec rubocop
+
+I used `rspec`, `rubocop` and `simple_cov` for testing and coverage.
+I could have used `minitest`, but it seems more fitting to use common testing.
+
+The `JFormalize` gem uses `minitest` as it is important to have no external dependencies in it.
+
+Once the tests have been run, the code coverage can be viewed [here](./coverage/index.html).
+
+> Obviously this won't show up in github.
 
 ## Git
 
-[Full details](./GitFlow.md)
-[Bash details](./GitBash.md)
+[Git Flow](./GitFlow.md)
+
+[Bash Details](./GitBash.md)
 
